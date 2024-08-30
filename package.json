@@ -2,7 +2,9 @@
   "name": "@task-manager/source",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "nx": "nx"
+  },
   "private": true,
   "dependencies": {
     "@angular/animations": "~18.2.0",
@@ -38,6 +40,7 @@
     "@nx/js": "19.6.4",
     "@nx/web": "19.6.4",
     "@nx/workspace": "19.6.4",
+    "@nxrocks/nx-spring-boot": "^10.2.6",
     "@schematics/angular": "~18.2.0",
     "@swc-node/register": "~1.9.1",
     "@swc/core": "~1.5.7",
