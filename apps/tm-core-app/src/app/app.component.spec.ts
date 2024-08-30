@@ -15,13 +15,13 @@ describe('AppComponent', () => {
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.querySelector('h1')?.textContent).toContain(
-      'Welcome task-manager'
+      'Welcome tm-core-app'
     );
   });
 
-  it(`should have as title 'task-manager'`, () => {
+  it(`should have as title 'tm-core-app'`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    expect(app.title).toEqual('task-manager');
+    expect(app.title).toEqual('tm-core-app');
   });
 });

@@ -1,28 +1,28 @@
 {
-  "name": "task-manager",
+  "name": "tm-core-app",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
   "prefix": "app",
-  "sourceRoot": "apps/task-manager/src",
+  "sourceRoot": "apps/tm-core-app/src",
   "tags": [],
   "targets": {
     "build": {
       "executor": "@angular-devkit/build-angular:browser",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/apps/task-manager/browser",
-        "index": "apps/task-manager/src/index.html",
-        "main": "apps/task-manager/src/main.ts",
+        "outputPath": "dist/apps/tm-core-app/browser",
+        "index": "apps/tm-core-app/src/index.html",
+        "main": "apps/tm-core-app/src/main.ts",
         "polyfills": ["zone.js"],
-        "tsConfig": "apps/task-manager/tsconfig.app.json",
+        "tsConfig": "apps/tm-core-app/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
         "assets": [
           {
             "glob": "**/*",
-            "input": "apps/task-manager/public"
+            "input": "apps/tm-core-app/public"
           }
         ],
-        "styles": ["apps/task-manager/src/styles.scss"],
+        "styles": ["apps/tm-core-app/src/styles.scss"],
         "scripts": []
       },
       "configurations": {
@@ -56,10 +56,10 @@
       "executor": "@angular-devkit/build-angular:dev-server",
       "configurations": {
         "production": {
-          "buildTarget": "task-manager:build:production"
+          "buildTarget": "tm-core-app:build:production"
         },
         "development": {
-          "buildTarget": "task-manager:build:development"
+          "buildTarget": "tm-core-app:build:development"
         }
       },
       "defaultConfiguration": "development"
@@ -67,7 +67,7 @@
     "extract-i18n": {
       "executor": "@angular-devkit/build-angular:extract-i18n",
       "options": {
-        "buildTarget": "task-manager:build"
+        "buildTarget": "tm-core-app:build"
       }
     },
     "lint": {
@@ -77,13 +77,13 @@
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "apps/task-manager/jest.config.ts"
+        "jestConfig": "apps/tm-core-app/jest.config.ts"
       }
     },
     "serve-static": {
       "executor": "@nx/web:file-server",
       "options": {
-        "buildTarget": "task-manager:build",
+        "buildTarget": "tm-core-app:build",
         "port": 4200,
         "spa": true
       }
@@ -92,9 +92,9 @@
       "dependsOn": ["build"],
       "executor": "@angular-devkit/build-angular:server",
       "options": {
-        "outputPath": "dist/apps/task-manager/server",
-        "main": "apps/task-manager/server.ts",
-        "tsConfig": "apps/task-manager/tsconfig.server.json",
+        "outputPath": "dist/apps/tm-core-app/server",
+        "main": "apps/tm-core-app/server.ts",
+        "tsConfig": "apps/tm-core-app/tsconfig.server.json",
         "inlineStyleLanguage": "scss"
       },
       "configurations": {
@@ -115,12 +115,12 @@
       "executor": "@angular-devkit/build-angular:ssr-dev-server",
       "configurations": {
         "development": {
-          "browserTarget": "task-manager:build:development",
-          "serverTarget": "task-manager:server:development"
+          "browserTarget": "tm-core-app:build:development",
+          "serverTarget": "tm-core-app:server:development"
         },
         "production": {
-          "browserTarget": "task-manager:build:production",
-          "serverTarget": "task-manager:server:production"
+          "browserTarget": "tm-core-app:build:production",
+          "serverTarget": "tm-core-app:server:production"
         }
       },
       "defaultConfiguration": "development"
@@ -132,12 +132,12 @@
       },
       "configurations": {
         "development": {
-          "browserTarget": "task-manager:build:development",
-          "serverTarget": "task-manager:server:development"
+          "browserTarget": "tm-core-app:build:development",
+          "serverTarget": "tm-core-app:server:development"
         },
         "production": {
-          "browserTarget": "task-manager:build:production",
-          "serverTarget": "task-manager:server:production"
+          "browserTarget": "tm-core-app:build:production",
+          "serverTarget": "tm-core-app:server:production"
         }
       },
       "defaultConfiguration": "production"

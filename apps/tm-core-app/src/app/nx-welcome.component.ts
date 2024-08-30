@@ -433,7 +433,7 @@ import { CommonModule } from '@angular/common';
         <div id="welcome">
           <h1>
             <span> Hello there, </span>
-            Welcome task-manager 👋
+            Welcome tm-core-app 👋
           </h1>
         </div>
         <!--  HERO  -->
@@ -799,7 +799,7 @@ nx run-many -t build test lint</pre>
               </svg>
               View project details
             </summary>
-            <pre>nx show project task-manager</pre>
+            <pre>nx show project tm-core-app</pre>
           </details>
 
           <details>

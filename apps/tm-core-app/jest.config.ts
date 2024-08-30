@@ -1,9 +1,9 @@
 /* eslint-disable */
 export default {
-  displayName: 'task-manager',
+  displayName: 'tm-core-app',
   preset: '../../jest.preset.js',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
-  coverageDirectory: '../../coverage/apps/task-manager',
+  coverageDirectory: '../../coverage/apps/tm-core-app',
   transform: {
     '^.+\\.(ts|mjs|js|html)$': [
       'jest-preset-angular',
