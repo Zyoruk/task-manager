@@ -1,4 +1,5 @@
 services:
+  # Microservices
   tm-auth-service:
     build:
       context: . # Build context is the monorepo root
@@ -23,3 +24,10 @@ services:
       dockerfile: ./apps/tm-tasks-api/Dockerfile
     ports:
       - "3003:3000"
+  # Microfrontends
+  tm-core-app:  
+    build:
+      context: . # Build context is the monorepo root
+      dockerfile: ./apps/tm-core-app/Dockerfile
+    ports:
+      - "4200:4200"
