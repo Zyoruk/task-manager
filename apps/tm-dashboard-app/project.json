@@ -10,7 +10,7 @@
       "executor": "@angular-devkit/build-angular:browser",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/apps/tm-dashboard-app/browser",
+        "outputPath": "dist/apps/tm-dashboard-app",
         "index": "apps/tm-dashboard-app/src/index.html",
         "main": "apps/tm-dashboard-app/src/main.ts",
         "polyfills": ["zone.js"],
@@ -87,60 +87,6 @@
         "port": 4200,
         "spa": true
       }
-    },
-    "server": {
-      "dependsOn": ["build"],
-      "executor": "@angular-devkit/build-angular:server",
-      "options": {
-        "outputPath": "dist/apps/tm-dashboard-app/server",
-        "main": "apps/tm-dashboard-app/server.ts",
-        "tsConfig": "apps/tm-dashboard-app/tsconfig.server.json",
-        "inlineStyleLanguage": "scss"
-      },
-      "configurations": {
-        "production": {
-          "outputHashing": "media"
-        },
-        "development": {
-          "buildOptimizer": false,
-          "optimization": false,
-          "sourceMap": true,
-          "extractLicenses": false,
-          "vendorChunk": true
-        }
-      },
-      "defaultConfiguration": "production"
-    },
-    "serve-ssr": {
-      "executor": "@angular-devkit/build-angular:ssr-dev-server",
-      "configurations": {
-        "development": {
-          "browserTarget": "tm-dashboard-app:build:development",
-          "serverTarget": "tm-dashboard-app:server:development"
-        },
-        "production": {
-          "browserTarget": "tm-dashboard-app:build:production",
-          "serverTarget": "tm-dashboard-app:server:production"
-        }
-      },
-      "defaultConfiguration": "development"
-    },
-    "prerender": {
-      "executor": "@angular-devkit/build-angular:prerender",
-      "options": {
-        "routes": ["/"]
-      },
-      "configurations": {
-        "development": {
-          "browserTarget": "tm-dashboard-app:build:development",
-          "serverTarget": "tm-dashboard-app:server:development"
-        },
-        "production": {
-          "browserTarget": "tm-dashboard-app:build:production",
-          "serverTarget": "tm-dashboard-app:server:production"
-        }
-      },
-      "defaultConfiguration": "production"
     }
   }
 }
