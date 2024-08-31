@@ -10,7 +10,7 @@
       "executor": "@angular-devkit/build-angular:browser",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/apps/tm-core-app/browser",
+        "outputPath": "dist/apps/tm-core-app",
         "index": "apps/tm-core-app/src/index.html",
         "main": "apps/tm-core-app/src/main.ts",
         "polyfills": ["zone.js"],
@@ -87,60 +87,6 @@
         "port": 4200,
         "spa": true
       }
-    },
-    "server": {
-      "dependsOn": ["build"],
-      "executor": "@angular-devkit/build-angular:server",
-      "options": {
-        "outputPath": "dist/apps/tm-core-app/server",
-        "main": "apps/tm-core-app/server.ts",
-        "tsConfig": "apps/tm-core-app/tsconfig.server.json",
-        "inlineStyleLanguage": "scss"
-      },
-      "configurations": {
-        "production": {
-          "outputHashing": "media"
-        },
-        "development": {
-          "buildOptimizer": false,
-          "optimization": false,
-          "sourceMap": true,
-          "extractLicenses": false,
-          "vendorChunk": true
-        }
-      },
-      "defaultConfiguration": "production"
-    },
-    "serve-ssr": {
-      "executor": "@angular-devkit/build-angular:ssr-dev-server",
-      "configurations": {
-        "development": {
-          "browserTarget": "tm-core-app:build:development",
-          "serverTarget": "tm-core-app:server:development"
-        },
-        "production": {
-          "browserTarget": "tm-core-app:build:production",
-          "serverTarget": "tm-core-app:server:production"
-        }
-      },
-      "defaultConfiguration": "development"
-    },
-    "prerender": {
-      "executor": "@angular-devkit/build-angular:prerender",
-      "options": {
-        "routes": ["/"]
-      },
-      "configurations": {
-        "development": {
-          "browserTarget": "tm-core-app:build:development",
-          "serverTarget": "tm-core-app:server:development"
-        },
-        "production": {
-          "browserTarget": "tm-core-app:build:production",
-          "serverTarget": "tm-core-app:server:production"
-        }
-      },
-      "defaultConfiguration": "production"
     }
   }
 }
