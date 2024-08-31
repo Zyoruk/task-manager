@@ -1,0 +1,25 @@
+services:
+  tm-auth-service:
+    build:
+      context: . # Build context is the monorepo root
+      dockerfile: ./apps/tm-auth-service/Dockerfile
+    ports:
+      - "3000:3000"
+  tm-metrics-api:
+    build:
+      context: . # Build context is the monorepo root
+      dockerfile: ./apps/tm-metrics-api/Dockerfile
+    ports:
+      - "3001:3000"
+  tm-notifications-api:
+    build:
+      context: . # Build context is the monorepo root
+      dockerfile: ./apps/tm-notifications-api/Dockerfile
+    ports:
+      - "3002:3000"
+  tm-tasks-api:
+    build:
+      context: . # Build context is the monorepo root
+      dockerfile: ./apps/tm-tasks-api/Dockerfile
+    ports:
+      - "3003:3000"
