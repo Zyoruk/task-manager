@@ -20,16 +20,20 @@ This repository contains a full-stack Task Manager application built with Angula
    $ git clone https://github.com/your-username/task-manager.git
    $ cd task-manager
    ```
-1. Install dependencies:
+1. Use the expected node version
+    ```bash
+    $ nvm install
+    ```
+2. Install dependencies:
 
     ```bash
     $ npm install
     ```
-1. Build the apps
+3. Build the apps
     ```bash
     $ npm run build:all
     ```
-1. Start the application using Docker Compose:
+4. Start the application using Docker Compose:
 
     ```
     $ docker-compose up -d
@@ -46,17 +50,17 @@ This will build and start all services defined in docker-compose.yml.
 #### Running a Specific App
 Use the following command to run a specific application in development mode:
 ```bash
-nx serve <app-name> 
+$ nx serve <app-name> 
 ```
 For example:
 ```bash
-nx serve tm-core-app
+$ nx serve tm-core-app
 ```
 
 #### Creating a New Microservice
 Generate the service using Nx:
 ```
-nx generate @nx/nest:application <service-name> --frontendProject=<frontend-app-name> 
+$ nx generate @nx/nest:application <service-name> --frontendProject=<frontend-app-name> 
 ```
 
 Replace `<service-name>` and `<frontend-app-name>` with your desired names.
@@ -141,3 +145,8 @@ graph TD
   I -- Notifications Event --> G
   K["Mongo Express"] --> J
 ```
+
+# Notes
+1. The `package.json` files inside each individual project are meant for Docker to know what to install per app. Do not install them locally.
+2. `Docker` is meant for built environments. Do not expect them to reflect your changes if you have not re-compiled.
+3. For development, you can adjust the dev compose file so that it only includes services or apps you won't change. You are expected to develop in your machine in watch mode and then point the URLs to the docker services. Typically, services would use the Docker host aliases instead of IPs. Change this to IPs when working on the service of interest.
