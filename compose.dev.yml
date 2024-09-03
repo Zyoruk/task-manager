@@ -1,36 +1,4 @@
 services:
-  # Microservices
-  tm-auth-service:
-    build:
-      context: . # Build context is the monorepo root
-      dockerfile: ./apps/tm-auth-service/Dockerfile
-    ports:
-      - "3000:3000"
-  tm-metrics-api:
-    build:
-      context: . # Build context is the monorepo root
-      dockerfile: ./apps/tm-metrics-api/Dockerfile
-    ports:
-      - "3001:3000"
-  tm-notifications-api:
-    build:
-      context: . # Build context is the monorepo root
-      dockerfile: ./apps/tm-notifications-api/Dockerfile
-    ports:
-      - "3002:3000"
-  tm-tasks-api:
-    build:
-      context: . # Build context is the monorepo root
-      dockerfile: ./apps/tm-tasks-api/Dockerfile
-    ports:
-      - "3003:3000"
-  # Microfrontends
-  tm-core-app:  
-    build:
-      context: . # Build context is the monorepo root
-      dockerfile: ./apps/tm-core-app/Dockerfile
-    ports:
-      - "4200:4200"
   # Message Queue
   rabbitmq:
     image: rabbitmq:3-management
