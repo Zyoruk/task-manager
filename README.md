@@ -1,82 +1,143 @@
-# TaskManager
+# Task Manager Application
 
-<a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
+## Overview
 
-✨ Your new, shiny [Nx workspace](https://nx.dev) is almost ready ✨.
+This repository contains a full-stack Task Manager application built with Angular, NestJS, and a microservices architecture. It leverages Nx for monorepo management and Docker Compose for streamlined development and deployment.
 
-[Learn more about this workspace setup and its capabilities](https://nx.dev/getting-started/tutorials/angular-monorepo-tutorial?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects) or run `npx nx graph` to visually explore what was created. Now, let's get you up to speed!
+## Getting Started
 
-## Finish your CI setup
+### Prerequisites
 
-[Click here to finish setting up your workspace!](https://cloud.nx.app/connect/kDWo1wjHjF)
+- Docker
+- Docker Compose
+- Node.js (LTS recommended)
+- npm or yarn
 
+### Installation
 
-## Run tasks
+1. **Clone the repository:**
+   ```bash
+   $ git clone https://github.com/your-username/task-manager.git
+   $ cd task-manager
+   ```
+1. Install dependencies:
 
-To run the dev server for your app, use:
+    ```bash
+    $ npm install
+    ```
+1. Build the apps
+    ```bash
+    $ npm run build:all
+    ```
+1. Start the application using Docker Compose:
 
-```sh
-npx nx serve task-manager
+    ```
+    $ docker-compose up -d
+    ````
+
+This will build and start all services defined in docker-compose.yml.
+
+### Accessing the Application
+- Task Manager UI (tm-core-app): http://localhost:4200
+- RabbitMQ Management UI: http://localhost:15672 (default credentials: guest/guest)
+- Mongo Express: http://localhost:8081 (credentials: root/example)
+
+### Development
+#### Running a Specific App
+Use the following command to run a specific application in development mode:
+```bash
+nx serve <app-name> 
+```
+For example:
+```bash
+nx serve tm-core-app
 ```
 
-To create a production bundle:
-
-```sh
-npx nx build task-manager
+#### Creating a New Microservice
+Generate the service using Nx:
+```
+nx generate @nx/nest:application <service-name> --frontendProject=<frontend-app-name> 
 ```
 
-To see all available targets to run for a project, run:
+Replace `<service-name>` and `<frontend-app-name>` with your desired names.
 
-```sh
-npx nx show project task-manager
+Define the service in `docker-compose.yml`, specifying the build context, ports, and dependencies.
+
+Implement your API logic within the generated service directory.
+
+#### Connecting to the Database
+The MongoDB connection details are available as environment variables within Docker containers:
+```YML
+MONGO_INITDB_ROOT_USERNAME: root
+MONGO_INITDB_ROOT_PASSWORD: example
+MONGO_INITDB_DATABASE: taskmanagerdb
 ```
-        
-These targets are either [inferred automatically](https://nx.dev/concepts/inferred-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or defined in the `project.json` or `package.json` files.
-
-[More about running tasks in the docs &raquo;](https://nx.dev/features/run-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Add new projects
-
-While you could add new projects to your workspace manually, you might want to leverage [Nx plugins](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) and their [code generation](https://nx.dev/features/generate-code?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) feature.
-
-Use the plugin's generator to create new projects.
-
-To generate a new application, use:
-
-```sh
-npx nx g @nx/angular:app demo
+### Using the Message Queue
+The RabbitMQ connection details are also available as environment variables:
+```YML
+Hostname: rabbitmq
+Port: 5672
 ```
 
-To generate a new library, use:
+## Architecture
 
-```sh
-npx nx g @nx/angular:lib mylib
+The application is structured as an Nx workspace, with code organized into apps and libs:
+
+- **Apps:** Represent independently deployable units (microservices, microfrontends).
+- **Libs:** Contain shared code (components, utilities, services) consumed by apps.
+
+**Key Components:**
+
+- **Microfrontends:**
+    - `tm-core-app`: The main user interface for interacting with the Task Manager.
+    - `tm-dashboard-app`: (Potentially) A separate dashboard for analytics or admin tasks.
+    - `tm-notifications-app`: (Potentially) A dedicated UI for managing notifications.
+    - `tm-tasks-app`: (Potentially) A focused interface for task-related actions.
+- **Microservices:**
+    - `tm-auth-service`: Handles user authentication and authorization.
+    - `tm-metrics-api`: Provides API endpoints for application metrics.
+    - `tm-notifications-api`: Manages notifications related to tasks.
+    - `tm-tasks-api`: Exposes API endpoints for managing tasks.
+- **Infrastructure:**
+    - `rabbitmq`: Message queue for asynchronous communication between microservices.
+    - `mongodb`: Primary database for storing application data.
+    - `mongo-express`: Web-based UI for managing the MongoDB database.
+
+
+### Architecture Diagram
+
+```mermaid
+graph TD
+  subgraph "Client (Browser)"
+    A["tm-core-app"]
+    B["tm-notifications-app (Module)"]
+    C["tm-dashboard-app"]
+    D["tm-tasks-app"]
+  end
+  subgraph "Backend"
+    subgraph "Microservices"
+      E["tm-auth-service"]
+      F["tm-metrics-api"]
+      G["tm-notifications-api"]
+      H["tm-tasks-api"]
+    end
+    subgraph "Infrastructure"
+      I["RabbitMQ"]
+      J["MongoDB"]
+    end
+  end
+  A --> B
+  A --> C
+  A --> D
+  B --> G -.-> E
+  C --> F -.-> E
+  D --> H -.-> E
+  G -- WebSockets --> B
+  E --> J
+  F --> J
+  G --> J
+  H --> J
+  H -- Cronjob (Due Dates) --> I
+  I -- Notifications Event --> G
+  K["Mongo Express"] --> J
 ```
-
-You can use `npx nx list` to get a list of installed plugins. Then, run `npx nx list <plugin-name>` to learn about more specific capabilities of a particular plugin. Alternatively, [install Nx Console](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) to browse plugins and generators in your IDE.
-
-[Learn more about Nx plugins &raquo;](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) | [Browse the plugin registry &raquo;](https://nx.dev/plugin-registry?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-
-[Learn more about Nx on CI](https://nx.dev/ci/intro/ci-with-nx#ready-get-started-with-your-provider?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Install Nx Console
-
-Nx Console is an editor extension that enriches your developer experience. It lets you run tasks, generate code, and improves code autocompletion in your IDE. It is available for VSCode and IntelliJ.
-
-[Install Nx Console &raquo;](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Useful links
-
-Learn more:
-
-- [Learn more about this workspace setup](https://nx.dev/getting-started/tutorials/angular-monorepo-tutorial?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects)
-- [Learn about Nx on CI](https://nx.dev/ci/intro/ci-with-nx?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Releasing Packages with Nx release](https://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [What are Nx plugins?](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-And join the Nx community:
-- [Discord](https://go.nx.dev/community)
-- [Follow us on X](https://twitter.com/nxdevtools) or [LinkedIn](https://www.linkedin.com/company/nrwl)
-- [Our Youtube channel](https://www.youtube.com/@nxdevtools)
-- [Our blog](https://nx.dev/blog?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
