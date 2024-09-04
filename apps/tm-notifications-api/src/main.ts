@@ -7,8 +7,14 @@ import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { Transport, MicroserviceOptions } from '@nestjs/microservices';
 import { AppModule } from './app/app.module';
+import { ConfigModule } from '@nestjs/config';
 
 async function bootstrap() {
+  // Load environment variables
+  ConfigModule.forRoot({
+    isGlobal: true, // Make environment variables globally accessible
+    envFilePath: ['.env'], // Load from the app's .env file
+  });
   const app = await NestFactory.create(AppModule);
   const mqUrls = [process.env.MQURL || 'amqp://localhost:5672']
   const mqMicroservice = await NestFactory.createMicroservice<MicroserviceOptions>(AppModule, {

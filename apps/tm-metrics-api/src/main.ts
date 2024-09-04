@@ -5,10 +5,15 @@
 
 import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-
+import { ConfigModule } from '@nestjs/config';
 import { AppModule } from './app/app.module';
 
 async function bootstrap() {
+  // Load environment variables
+  ConfigModule.forRoot({
+    isGlobal: true, // Make environment variables globally accessible
+    envFilePath: ['.env'], // Load from the app's .env file
+  });
   const app = await NestFactory.create(AppModule);
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);
