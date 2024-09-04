@@ -16,12 +16,6 @@ export class User {
 
     @Prop({ type: String })
     lastName?: string;
-
-    @Prop({ type: String })
-    role?: string;
-
-    @Prop({ type: [String], default: [] }) // Store multiple refresh tokens
-    refreshTokens: string[];
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

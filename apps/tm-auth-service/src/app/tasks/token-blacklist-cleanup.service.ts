@@ -3,7 +3,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { BlacklistedToken, BlacklistedTokenDocument } from '../schemas/blacklisted-token.schema';
+import { BlacklistedToken, BlacklistedTokenDocument } from '../auth/schemas/blacklisted-token.schema';
 
 @Injectable()
 export class TokenCleanupService {
