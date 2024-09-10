@@ -11,7 +11,6 @@ import {
 } from '@nestjs/common';
 import { AuthService } from '../services/auth.service';
 import { CreateUserDto } from '../../user/dto/create-user.dto';
-import { User } from '../../user/schemas/user.schema';
 import { AuthGuard } from '@nestjs/passport';
 import { UserService } from '../../user/services/user.service';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -87,7 +86,7 @@ export class AuthController {
   })
   @ApiResponse({ status: 201, description: 'User created successfully' })
   @ApiResponse({ status: 400, description: 'Bad request' })
-  @Post('register')
+  @Post('signup')
   async register(@Body() createUserDto: CreateUserDto, @Res() res: Response ) {
     try {
       const newUser = await this.authService.register(createUserDto);
