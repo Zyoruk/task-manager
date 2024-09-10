@@ -19,17 +19,4 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     Logger.debug('Token is valid: ' + validateToken);
     return validateToken;
   }
-
-  handleRequest<TUser = any>(err: any, user: any, info: any, context: ExecutionContext, status?: any): TUser {
-      console.log({
-        err,
-        user,
-        info,
-        context,
-        status
-      })
-
-      return super.handleRequest(err, user, info, context, status)
-  }
-
 }

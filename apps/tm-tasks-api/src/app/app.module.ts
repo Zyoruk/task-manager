@@ -1,14 +1,15 @@
-import { Module } from '@nestjs/common';
+import { Module, ValidationPipe } from '@nestjs/common';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { MongooseModule } from '@nestjs/mongoose';
-import { SchemasModule } from './schemas/schemas.module';
 import { AuthModule } from './auth/auth.module';
 import { HttpModule } from '@nestjs/axios';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtAuthGuard } from './auth/guards/jwt.guard';
+import { APP_PIPE } from '@nestjs/core';
+import { TasksModule } from './tasks/tasks.module';
 
 const mqUrls = [process.env.MQURL || 'amqp://localhost:5672'];
 
@@ -43,11 +44,30 @@ const mqUrls = [process.env.MQURL || 'amqp://localhost:5672'];
       inject: [ConfigService],
     }),
     HttpModule,
-    SchemasModule,
     AuthModule,
-    ConfigModule
+    ConfigModule,
+    TasksModule
   ],
   controllers: [AppController],
-  providers: [AppService, JwtAuthGuard],
+  providers: [
+    AppService,
+    JwtAuthGuard,
+    {
+      provide: APP_PIPE, // Register the ValidationPipe globally
+      useClass: ValidationPipe,
+      useValue: new ValidationPipe({
+        whitelist: true, // Strip properties not in the DTO
+        forbidNonWhitelisted: true, // Throw error for non-whitelisted properties
+        transform: true, // Transform payload to DTO instance
+        transformOptions: {
+          enableImplicitConversion: true, // Enable type conversion (e.g., string to number)
+        },
+        validationError: {
+          target: false, // Remove DTO properties from error response
+          value: false, // Remove values from error response
+        },
+      }),
+    },
+  ],
 })
 export class AppModule {}

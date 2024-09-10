@@ -28,8 +28,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       if (!isValid) {
         throw new UnauthorizedException('Invalid token');
       }
+      Logger.log(JSON.stringify(payload, null, 2))
       return {
-        userId: payload.sub,
+        _id: payload._id,
+        userId: payload.userId,
         email: payload.email,
         firstName: payload.firstName,
         lastName: payload.lastName,

@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema, Types } from 'mongoose';
+import { TaskStatus } from '../models/task-status';
 
 export type TaskDocument = Task & Document;
 
@@ -17,30 +18,17 @@ export class Task {
   @Prop({ type: String })
   description?: string;
 
-  @Prop({ type: String, enum: ['BUG', 'FEATURE', 'TASK', 'EPIC', 'STORY'], required: true }) // Define your task types
-  type: string;
-
-  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'User', required: true }) // Assuming you have a User model
-  assignedTo: Types.ObjectId;
+  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'User', required: false }) // Assuming you have a User model
+  assignedTo?: Types.ObjectId;
 
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'User', required: true }) // Assuming you have a User model
   reportedBy: Types.ObjectId;
 
   @Prop({ type: Date })
-  dueDate?: Date;
+  dueDate: Date;
 
-  @Prop({ type: Boolean, default: false })
-  completed: boolean;
-
-  @Prop({ type: [MongooseSchema.Types.ObjectId], ref: 'Task' }) // For subtasks or linking tasks
-  parentTasks?: Types.ObjectId[];
-
-  @Prop({ type: [{ body: String, author: { type: MongooseSchema.Types.ObjectId, ref: 'User' }, createdAt: { type: Date, default: Date.now } }] })
-  comments: {
-    body: string;
-    author: Types.ObjectId;
-    createdAt: Date;
-  }[];
+  @Prop({ type: String, enum: Object.values(TaskStatus), default: TaskStatus.PENDING })
+  status: TaskStatus;
 }
 
 export const TaskSchema = SchemaFactory.createForClass(Task);
