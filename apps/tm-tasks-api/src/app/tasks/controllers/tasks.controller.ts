@@ -84,7 +84,7 @@ export class TasksController {
     return this.tasksService.getAll(userContext);
   }
 
-  @Delete(':taskId')
+  @Delete(':id')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @ApiResponse({
@@ -92,28 +92,28 @@ export class TasksController {
     description: 'Task deleted successfully',
   })
   async deleteTask(
-    @Param('taskId') taskId: string,
+    @Param('id') taskId: string,
     @UserContext() userContext: IUser
   ) {
     return this.tasksService.deleteTask(taskId, userContext);
   }
 
-  @Put(':taskId')
+  @Put(':id')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   async updateTask(
-    @Param('taskId') taskId: string,
+    @Param('id') taskId: string,
     @Body() task: UpdateTaskDTO,
     @UserContext() userContext: IUser
   ) {
     return this.tasksService.updateTask(taskId, task, userContext);
   }
 
-  @Get(':taskId')
+  @Get(':id')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   async getTask(
-    @Param('taskId') taskId: string,
+    @Param('id') taskId: string,
     @UserContext() userContext: IUser
   ) {
     return this.tasksService.getTask(taskId, userContext);
