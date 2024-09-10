@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, ValidationPipe } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 
 import { AppController } from './app.controller';
@@ -8,6 +8,7 @@ import { AuthModule } from './auth/auth.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AppService } from './app.service';
+import { APP_PIPE } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -31,7 +32,25 @@ import { AppService } from './app.service';
     AuthModule,
     ScheduleModule.forRoot(),
   ],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_PIPE, // Register the ValidationPipe globally
+      useClass: ValidationPipe,
+      useValue: new ValidationPipe({
+        whitelist: true, // Strip properties not in the DTO
+        forbidNonWhitelisted: true, // Throw error for non-whitelisted properties
+        transform: true, // Transform payload to DTO instance
+        transformOptions: {
+          enableImplicitConversion: true, // Enable type conversion (e.g., string to number)
+        },
+        validationError: {
+          target: false, // Remove DTO properties from error response
+          value: false, // Remove values from error response
+        },
+      }),
+    },
+  ],
   controllers: [AppController, AuthController],
 })
 export class AppModule {}
