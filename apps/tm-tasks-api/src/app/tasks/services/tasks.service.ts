@@ -7,6 +7,8 @@ import { CreateTaskDTO } from '../../dto/create-task.dto';
 import { Task } from '../schemas/task';
 import { IUser } from '../../types/user';
 import { UpdateTaskDTO } from '../../dto/update-task.dto';
+import { TaskStatus } from '../models/task-status';
+import { SortOrder as SortOrderOptions } from '../../types/sort-options';
 
 @Injectable()
 export class TasksService {
@@ -37,16 +39,36 @@ export class TasksService {
     }
   }
 
-  async getAll(user: IUser, options: { page: number; limit: number }) {
-    const { page, limit } = options;
+  async getAll(
+    user: IUser,
+    options: {
+      page: number;
+      limit: number;
+      status?: TaskStatus;
+      sortByDueDate?: SortOrderOptions;
+    }
+  ): Promise<Task[]> {
+    const { page, limit, status, sortByDueDate } = options;
     const skip = (page - 1) * limit;
+
+    const query: any = {
+      $or: [{ reportedBy: user._id }, { assignedTo: user._id }],
+      deleted: { $ne: true },
+    };
+
+    if (status) {
+      query.status = status;
+    }
+
+    const sortOptions: any = {};
+    if (sortByDueDate) {
+      sortOptions.dueDate = sortByDueDate === SortOrderOptions.ASC ? 1 : -1;
+    }
 
     try {
       const allTasks = await this.taskModel
-        .find({
-          $or: [{ reportedBy: user._id }, { assignedTo: user._id }],
-          deleted: { $ne: true }
-        })
+        .find(query)
+        .sort(sortOptions)
         .skip(skip)
         .limit(limit)
         .exec();

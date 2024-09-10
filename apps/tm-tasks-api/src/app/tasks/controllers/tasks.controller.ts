@@ -34,6 +34,7 @@ import { UpdateTaskDTO } from '../../dto/update-task.dto';
 import { TaskDTO } from '../../dto/task.dto';
 import { HttpStatusCode } from 'axios';
 import { DeletedTaskDTO } from '../../dto/deleted-task.dto';
+import { SortOrder } from '../../types/sort-options';
 
 @ApiTags('tasks')
 @Controller('tasks')
@@ -75,7 +76,6 @@ export class TasksController {
         .send({ message: 'Failed to create task', error });
     }
   }
-
   @Get()
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Get all tasks for the user' })
@@ -92,6 +92,18 @@ export class TasksController {
     description: 'Number of tasks per page',
     type: Number,
   })
+  @ApiQuery({
+    name: 'status',
+    required: false,
+    description: 'Filter by task status',
+    enum: TaskStatus,
+  })
+  @ApiQuery({
+    name: 'sortByDueDate',
+    required: false,
+    description: 'Sort by due date (asc or desc)',
+    enum: SortOrder,
+  })
   @ApiResponse({
     status: HttpStatusCode.Ok,
     description: 'Retrieved tasks successfully',
@@ -100,11 +112,17 @@ export class TasksController {
   async getAllTasks(
     @UserContext() userContext: IUser,
     @Query('page') page: number = 1,
-    @Query('limit') limit: number = 10
+    @Query('limit') limit: number = 10,
+    @Query('status') status?: TaskStatus,
+    @Query('sortByDueDate') sortByDueDate?: SortOrder
   ): Promise<TaskDTO[]> {
-    return (await this.tasksService.getAll(userContext, { page, limit})).map((task) => {
-      return TaskDTO.mapFromModel(task);
+    const tasks = await this.tasksService.getAll(userContext, {
+      page,
+      limit,
+      status,
+      sortByDueDate,
     });
+    return tasks.map((task) => TaskDTO.mapFromModel(task));
   }
 
   @Delete(':id')
