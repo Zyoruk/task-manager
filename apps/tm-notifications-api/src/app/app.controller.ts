@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Logger } from '@nestjs/common';
 
 import { AppService } from './app.service';
 import { EventPattern, MessagePattern } from '@nestjs/microservices';
@@ -9,7 +9,7 @@ export class AppController {
 
   @EventPattern('task')
   async handleTaskEvent(data: any) {
-    console.log('eventpattern', data);
+    Logger.log('eventpattern', data);
     return this.appService.getData();
   }
 
@@ -17,7 +17,7 @@ export class AppController {
     cmd: "update"
   })
   async handleTaskMessage(data: any) {
-    console.log('messagepattern',data);
+    Logger.log('messagepattern',data);
     return this.appService.getData();
   }
 }
