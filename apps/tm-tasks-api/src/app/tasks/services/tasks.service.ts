@@ -45,6 +45,7 @@ export class TasksService {
       const allTasks = await this.taskModel
         .find({
           $or: [{ reportedBy: user._id }, { assignedTo: user._id }],
+          deleted: { $ne: true }
         })
         .skip(skip)
         .limit(limit)
@@ -60,15 +61,23 @@ export class TasksService {
 
   async deleteTask(taskId: string, userContext: IUser) {
     try {
-      const deletedResult = await this.taskModel
-        .deleteOne({
+      const deletedResult = await this.taskModel.findOneAndUpdate(
+        {
           taskId,
           $or: [
             { reportedBy: userContext._id },
             { assignedTo: userContext._id },
           ],
-        })
-        .exec();
+        },
+        { deleted: true, deletedAt: new Date() }, // Mark as deleted
+        { new: true }
+      );
+
+      if (!deletedResult) {
+        // Handle case where task is not found or user is not authorized
+        return { deletedCount: 0 };
+      }
+
       this.notificationsServiceClient.emit('task', {
         action: 'delete',
         payload: {
@@ -76,7 +85,7 @@ export class TasksService {
         },
         userContext,
       });
-      return deletedResult;
+      return { deletedCount: 1 }; // Indicate successful soft delete
     } catch (error) {
       Logger.error('Failed to delete task');
       Logger.debug(error);

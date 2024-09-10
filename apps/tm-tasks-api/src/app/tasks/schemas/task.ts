@@ -29,6 +29,12 @@ export class Task {
 
   @Prop({ type: String, enum: Object.values(TaskStatus), default: TaskStatus.PENDING })
   status: TaskStatus;
+
+  @Prop({ type: Boolean, default: false })
+  deleted: boolean;
+
+  @Prop({ type: Date, default: Date.now })
+  deletedAt: Date;
 }
 
 export const TaskSchema = SchemaFactory.createForClass(Task);
