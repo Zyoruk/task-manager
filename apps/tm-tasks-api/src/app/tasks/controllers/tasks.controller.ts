@@ -64,10 +64,13 @@ export class TasksController {
     @UserContext() userContext: IUser
   ) {
     try {
-      const newTask = await this.tasksService.createNewTask({
-        ...createTaskDto,
-        reportedBy: userContext._id,
-      });
+      const newTask = await this.tasksService.createNewTask(
+        {
+          ...createTaskDto,
+          reportedBy: userContext._id,
+        },
+        userContext
+      );
       return res.status(201).send(newTask);
     } catch (error) {
       return res.status(400).send({ message: 'Failed to create task', error });

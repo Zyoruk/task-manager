@@ -16,7 +16,7 @@ export class TasksService {
     @InjectModel(Task.name) private taskModel: Model<Task>
   ) {}
 
-  async createNewTask(task: CreateTaskDTO & { reportedBy: string }) {
+  async createNewTask(task: CreateTaskDTO & { reportedBy: string }, userContext: IUser) {
     Logger.log(task);
     const newTask = new this.taskModel({ ...task, taskId: randomUUID() });
     try {
@@ -24,6 +24,7 @@ export class TasksService {
       this.notificationsServiceClient.emit('task', {
         action: 'create',
         payload: newTask,
+        userContext,
       });
       return newTask;
     } catch (error) {
@@ -59,6 +60,13 @@ export class TasksService {
           ],
         })
         .exec();
+      this.notificationsServiceClient.emit('task', {
+        action: 'delete',
+        payload: {
+          taskId,
+        },
+        userContext,
+      });
       return deletedResult;
     } catch (error) {
       Logger.error('Failed to delete task');
@@ -72,6 +80,11 @@ export class TasksService {
       const task = this.taskModel.findOne({
         taskId,
         $or: [{ reportedBy: userContext._id }, { assignedTo: userContext._id }],
+      });
+      this.notificationsServiceClient.emit('task', {
+        action: 'search',
+        payload: task,
+        userContext,
       });
       return task;
     } catch (error) {
@@ -94,6 +107,11 @@ export class TasksService {
         task,
         { new: true }
       );
+      this.notificationsServiceClient.emit('task', {
+        action: 'update',
+        payload: updatedTask,
+        userContext,
+      });
       return updatedTask;
     } catch (error) {
       Logger.error('Failed to update task');
