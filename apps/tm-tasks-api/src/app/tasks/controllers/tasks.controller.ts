@@ -8,6 +8,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   Res,
   UseGuards,
   UseInterceptors,
@@ -19,6 +20,7 @@ import {
   ApiOperation,
   ApiTags,
   ApiParam,
+  ApiQuery,
 } from '@nestjs/swagger';
 import { UserContext } from '../../auth/decorators/user-context.decorator';
 import { JwtAuthGuard } from '../../auth/guards/jwt.guard';
@@ -68,7 +70,9 @@ export class TasksController {
       );
       return res.status(HttpStatusCode.Ok).send(newTask);
     } catch (error) {
-      return res.status(HttpStatusCode.InternalServerError).send({ message: 'Failed to create task', error });
+      return res
+        .status(HttpStatusCode.InternalServerError)
+        .send({ message: 'Failed to create task', error });
     }
   }
 
@@ -76,13 +80,29 @@ export class TasksController {
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Get all tasks for the user' })
   @ApiBearerAuth()
+  @ApiQuery({
+    name: 'page',
+    required: false,
+    description: 'Page number',
+    type: Number,
+  })
+  @ApiQuery({
+    name: 'limit',
+    required: false,
+    description: 'Number of tasks per page',
+    type: Number,
+  })
   @ApiResponse({
     status: HttpStatusCode.Ok,
     description: 'Retrieved tasks successfully',
     type: [TaskDTO],
   })
-  async getAllTasks(@UserContext() userContext: IUser): Promise<TaskDTO[]> {
-    return (await this.tasksService.getAll(userContext)).map((task) => {
+  async getAllTasks(
+    @UserContext() userContext: IUser,
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 10
+  ): Promise<TaskDTO[]> {
+    return (await this.tasksService.getAll(userContext, { page, limit})).map((task) => {
       return TaskDTO.mapFromModel(task);
     });
   }

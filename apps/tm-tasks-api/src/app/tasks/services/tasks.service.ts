@@ -16,7 +16,10 @@ export class TasksService {
     @InjectModel(Task.name) private taskModel: Model<Task>
   ) {}
 
-  async createNewTask(task: CreateTaskDTO & { reportedBy: string }, userContext: IUser) {
+  async createNewTask(
+    task: CreateTaskDTO & { reportedBy: string },
+    userContext: IUser
+  ) {
     Logger.log(task);
     const newTask = new this.taskModel({ ...task, taskId: randomUUID() });
     try {
@@ -34,13 +37,19 @@ export class TasksService {
     }
   }
 
-  async getAll(user: IUser) {
+  async getAll(user: IUser, options: { page: number; limit: number }) {
+    const { page, limit } = options;
+    const skip = (page - 1) * limit;
+
     try {
       const allTasks = await this.taskModel
         .find({
           $or: [{ reportedBy: user._id }, { assignedTo: user._id }],
         })
+        .skip(skip)
+        .limit(limit)
         .exec();
+
       return allTasks;
     } catch (error) {
       Logger.error('Failed to get all tasks');
