@@ -21,7 +21,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       console.log('Invalid token')
       throw new UnauthorizedException('Invalid token');
     }
-
+    Logger.log('Pyload' + payload)
     // Fetch the complete user object based on the payload
     const user = await this.userService.findUserById(payload.sub); 
     if (!user) {
@@ -29,7 +29,8 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     }
     
     return {
-      userId: user._id,
+      _id: user._id,
+      userId: user.userId,
       email: user.email,
       firstName: user.firstName,
       lastName: user.lastName,

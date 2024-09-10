@@ -69,9 +69,12 @@ export class AuthController {
                 type: "string",
                 format: "email"
             },
+            // 'Password must contain at least one uppercase letter, one lowercase letter, one number and one special character'
             password: {
                 type: "string",
-                format: "password"
+                format: "password",
+                minLength: 8,
+                pattern: "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$",
             },
             firstName: {
                 type: "string"
@@ -85,8 +88,14 @@ export class AuthController {
   @ApiResponse({ status: 201, description: 'User created successfully' })
   @ApiResponse({ status: 400, description: 'Bad request' })
   @Post('register')
-  async register(@Body() createUserDto: CreateUserDto): Promise<User> {
-    return this.authService.register(createUserDto);
+  async register(@Body() createUserDto: CreateUserDto, @Res() res: Response ) {
+    try {
+      const newUser = await this.authService.register(createUserDto);
+      return res.status(200).send(newUser);
+    } catch (error) { 
+      Logger.log('Failed to create user');
+      return res.status(400).send({ message: 'Failed to create user', error });
+    }
   }
 
   @Post('logout')
