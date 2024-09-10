@@ -45,12 +45,12 @@ export class TasksController {
   @ApiBearerAuth()
   @ApiExtraModels(() => TaskStatus)
   @ApiResponse({
-    status: 201,
+    status: HttpStatusCode.Created,
     description: 'Task created successfully',
     type: TaskDTO,
   })
   @ApiResponse({
-    status: 400,
+    status: HttpStatusCode.InternalServerError,
     description: 'Failed to create task',
   })
   async createNewTask(
@@ -66,9 +66,9 @@ export class TasksController {
         },
         userContext
       );
-      return res.status(201).send(newTask);
+      return res.status(HttpStatusCode.Ok).send(newTask);
     } catch (error) {
-      return res.status(400).send({ message: 'Failed to create task', error });
+      return res.status(HttpStatusCode.InternalServerError).send({ message: 'Failed to create task', error });
     }
   }
 
@@ -77,7 +77,7 @@ export class TasksController {
   @ApiOperation({ summary: 'Get all tasks for the user' })
   @ApiBearerAuth()
   @ApiResponse({
-    status: 200,
+    status: HttpStatusCode.Ok,
     description: 'Retrieved tasks successfully',
     type: [TaskDTO],
   })
@@ -93,12 +93,12 @@ export class TasksController {
   @ApiOperation({ summary: 'Delete a task by ID' })
   @ApiParam({ name: 'id', description: 'Task ID' })
   @ApiResponse({
-    status: 204,
+    status: HttpStatusCode.Ok,
     description: 'Task deleted successfully',
     type: DeletedTaskDTO,
   })
   @ApiResponse({
-    status: 404,
+    status: HttpStatusCode.NotFound,
     description: 'Task not found',
   })
   async deleteTask(
@@ -151,7 +151,7 @@ export class TasksController {
   @ApiOperation({ summary: 'Get a task by ID' })
   @ApiParam({ name: 'id', description: 'Task ID' })
   @ApiResponse({
-    status: 200,
+    status: HttpStatusCode.Ok,
     description: 'Task retrieved successfully',
     type: TaskDTO,
   })
