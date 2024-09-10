@@ -16,6 +16,7 @@ import { UserService } from '../../user/services/user.service';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { LoginUserDto } from '../../user/dto/login-user.dto';
 import { Response } from 'express';
+import { ThrottlerGuard } from '@nestjs/throttler';
 
 @Controller('auth')
 @ApiTags('auth')
@@ -45,6 +46,7 @@ export class AuthController {
   @ApiResponse({ status: 200, description: 'Login successful' })
   @ApiResponse({ status: 401, description: 'Invalid credentials' })
   @Post('login')
+  @UseGuards(ThrottlerGuard)
   async login(@Body() userDto: LoginUserDto, @Res() res: Response) {
     const user = await this.authService.validateUser(
       userDto.email,
