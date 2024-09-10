@@ -6,6 +6,8 @@ import {
   UseGuards,
   Req,
   Res,
+  Get,
+  Logger,
 } from '@nestjs/common';
 import { AuthService } from '../services/auth.service';
 import { CreateUserDto } from '../../user/dto/create-user.dto';
@@ -94,5 +96,15 @@ export class AuthController {
     const token = req.headers.authorization?.split(' ')[1]; // Get token from header
     await this.authService.logout(token, req.user.email);
     return res.status(200).json({ message: 'Logout successful' });
+  }
+
+  @Get('validate_token')
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt')) // Protect the validate_token route
+  async validateToken(@Req() req: any)  { 
+    Logger.log('Validating token:')
+    const token = req.headers.authorization?.split(' ')[1]; // Get token from header
+    Logger.log('Token:' + token)
+    return this.authService.validateToken(token);
   }
 }

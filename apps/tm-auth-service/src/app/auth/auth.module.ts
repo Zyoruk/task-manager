@@ -7,7 +7,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
 import { AuthService } from './services/auth.service';
 import { AuthController } from './controllers/auth.controller';
 import { BlacklistedToken, BlacklistedTokenSchema } from './schemas/blacklisted-token.schema';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UserModule } from '../user/user.module';
 
 @Module({
@@ -16,9 +16,13 @@ import { UserModule } from '../user/user.module';
     MongooseModule.forFeature([{ name: BlacklistedToken.name, schema: BlacklistedTokenSchema}]),
     PassportModule,
     UserModule,
-    JwtModule.register({
-      secret: process.env.TM_WHISPER, // Replace with a strong secret
-      signOptions: { expiresIn: '1h' },
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        secret: configService.get<string>('TM_WHISPER'),
+        signOptions: { expiresIn: '1h' },
+      }),
+      inject: [ConfigService],
     }),
   ],
   controllers: [AuthController],

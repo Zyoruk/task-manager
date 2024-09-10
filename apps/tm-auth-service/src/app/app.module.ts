@@ -6,15 +6,27 @@ import { UserModule } from './user/user.module';
 import { AuthController } from './auth/controllers/auth.controller';
 import { AuthModule } from './auth/auth.module';
 import { ScheduleModule } from '@nestjs/schedule';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AppService } from './app.service';
 
 @Module({
   imports: [
     ConfigModule,
-    MongooseModule.forRoot(
-      'mongodb://newuser:newpassword@localhost:27017/taskmanagerdb'
-    ), // Connect to MongoDB
+    MongooseModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => {
+        return {
+          uri: `mongodb://${configService.get(
+            'MONGODB_USER'
+          )}:${configService.get('MONGODB_PASSWORD')}@${configService.get(
+            'MONGODB_HOST'
+          )}:${configService.get('MONGODB_PORT')}/${configService.get(
+            'MONGODB_TASKS_DB'
+          )}`,
+        };
+      },
+      inject: [ConfigService],
+    }),
     UserModule,
     AuthModule,
     ScheduleModule.forRoot(),
