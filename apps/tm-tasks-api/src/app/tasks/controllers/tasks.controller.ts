@@ -28,11 +28,10 @@ import { TaskStatus } from '../models/task-status';
 import { TasksService } from '../services/tasks.service';
 import { Response } from 'express';
 import { UserContextInterceptor } from '../../auth/interceptors/user-context.interceptor';
-import { Task } from '../schemas/task';
 import { UpdateTaskDTO } from '../../dto/update-task.dto';
 import { TaskDTO } from '../../dto/task.dto';
-import { NotFoundError } from 'rxjs';
 import { HttpStatusCode } from 'axios';
+import { DeletedTaskDTO } from '../../dto/deleted-task.dto';
 
 @ApiTags('tasks')
 @Controller('tasks')
@@ -96,6 +95,7 @@ export class TasksController {
   @ApiResponse({
     status: 204,
     description: 'Task deleted successfully',
+    type: DeletedTaskDTO,
   })
   @ApiResponse({
     status: 404,
@@ -104,7 +104,7 @@ export class TasksController {
   async deleteTask(
     @Param('id') taskId: string,
     @UserContext() userContext: IUser
-  ): Promise<Pick<TaskDTO, 'taskId'>> {
+  ): Promise<DeletedTaskDTO> {
     const deleted = await this.tasksService.deleteTask(taskId, userContext);
     if (deleted.deletedCount === 0)
       throw new HttpException(
