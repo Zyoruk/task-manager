@@ -1,8 +1,3 @@
-/**
- * This is not a production server yet!
- * This is only a minimal backend to get started.
- */
-
 import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
@@ -20,6 +15,9 @@ async function bootstrap() {
 
   // Extract metadata from package.json
   const { name, description, version } = packageJson;
+  const app = await NestFactory.create(AppModule);
+  const apiBasePath = process.env.API_BASE_PATH || ''; // Default to empty string
+  const swaggerPath = `/docs`; 
 
   // Create Swagger options using package.json data
   const config = new DocumentBuilder()
@@ -28,23 +26,20 @@ async function bootstrap() {
     .setVersion(version)
     .addTag('tasks') 
     .addBearerAuth() 
+    .addServer(apiBasePath + '/') // Set base path here
     .build();
-
-  const app = await NestFactory.create(AppModule);
-  const globalPrefix = 'api';
-  app.setGlobalPrefix(globalPrefix);
   const port = process.env.PORT || 3000;
 
   // Create Swagger document and setup UI
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('docs', app, document); 
+  SwaggerModule.setup(swaggerPath, app, document);
 
   // Provides context user to all endpoints
   app.use(cookieParser());
   app.enableCors();
   await app.listen(port);
   Logger.log(
-    `🚀 Application is running on: http://localhost:${port}/${globalPrefix}`
+    `🚀 Application is running on: http://localhost:${port}`
   );
 }
 
