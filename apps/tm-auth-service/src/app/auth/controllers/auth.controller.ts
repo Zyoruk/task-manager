@@ -18,7 +18,7 @@ import { LoginUserDto } from '../../user/dto/login-user.dto';
 import { Response } from 'express';
 import { ThrottlerGuard } from '@nestjs/throttler';
 
-@Controller('auth')
+@Controller()
 @ApiTags('auth')
 export class AuthController {
   constructor(
