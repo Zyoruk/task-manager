@@ -57,7 +57,7 @@ export class AuthService {
     }
 
     generateAccessToken(user: any): string {
-        const payload = { email: user.email, sub: user._id };
+        const payload = { email: user.email, sub: user._id, userId: user.userId };
         return this.jwtService.sign(payload, { expiresIn: '1h' }); // Short-lived access token
       }
 }
