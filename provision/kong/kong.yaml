@@ -1,0 +1,66 @@
+_format_version: "3.0"
+
+# --- Upstream Services ---
+services:
+  - name: tm-tasks-api
+    url: http://tm-tasks-api:3000 
+    routes:
+      - name: tasks-route
+        paths:
+          - /tasks
+        plugins:
+          # - name: tm-auth
+          - name: rate-limiting
+            config:
+              second: 5  # Limit to 5 requests per second per consumer
+              hour: 1000 # Limit to 1000 requests per hour per consumer
+
+  - name: tm-metrics-api
+    url: http://tm-metrics-api:3000
+    routes:
+      - name: metrics-route
+        paths:
+          - /metrics
+        plugins:
+          # - name: tm-auth
+          - name: rate-limiting
+            config:
+              minute: 10 # Limit to 10 requests per minute per consumer
+
+  - name: tm-auth-service
+    url: http://tm-auth-service:3000
+    routes:
+      - name: auth-route
+        paths:
+          - /auth # Adjust the path based on your auth service API
+        plugins:
+          - name: rate-limiting
+            config:
+              second: 10 # Higher limit for auth service, as it's critical
+  - name: tm-notifications-api
+    url: http://tm-notifications-api:3000 # Assuming you expose an HTTP interface for initial connection
+    routes:
+      - name: notifications-route
+        paths:
+          - /notifications
+        # plugins:
+        #   - name: tm-auth
+
+# --- Global Plugins for Security ---
+# plugins:
+#   - name: cors # Enable CORS for browser clients
+#     config:
+#       origins: ['*'] # Adjust to your specific origins
+#       methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']
+#       headers: ['Authorization', 'Content-Type']
+#       credentials: true
+#       exposed_headers: ['X-Custom-Header']
+#   - name: request-size-limiting # Prevent overly large requests
+#     config:
+#       allowed_payload_size: 1048576 # 1MB limit
+#   - name: request-termination # Protect against slow clients
+#     config:
+#       status_code: 403
+#       message: So long and thanks for all the fish!
+  # - name: bundled,tm-auth
+
