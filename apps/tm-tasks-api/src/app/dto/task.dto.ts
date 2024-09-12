@@ -35,8 +35,8 @@ export class TaskDTO {
     dto.taskId = model.taskId;
     dto.title = model.title;
     dto.description = model.description;
-    dto.assignedTo = model.assignedTo.toString();
-    dto.reportedBy = model.reportedBy.toString();
+    dto.assignedTo = model.assignedTo?.toString();
+    dto.reportedBy = model.reportedBy?.toString();
     dto.dueDate = model.dueDate;
     dto.status = model.status;
     return dto;
