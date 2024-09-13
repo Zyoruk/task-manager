@@ -16,11 +16,11 @@ export class AuthService {
 
   async validateToken(token: string): Promise<boolean> {
     Logger.debug(token);
-    Logger.debug(this.url + '/auth/validate_token');
+    Logger.debug(this.url + '/validate_token');
     Logger.log('Attempting to validate token')
     try {
       const isValid = await lastValueFrom(
-        this.httpService.get<boolean>(this.url + '/auth/validate_token', {
+        this.httpService.get<boolean>(this.url + '/validate_token', {
           headers: {
             Authorization: `Bearer ${token}`,
           },
