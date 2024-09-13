@@ -114,11 +114,14 @@ The application is structured as an Nx workspace, with code organized into apps 
 graph TD
   subgraph "Client (Browser)"
     A["tm-core-app"]
-    B["tm-notifications-app (Module)"]
-    C["tm-dashboard-app"]
-    D["tm-tasks-app"]
+    B["tm-dashboard-app"]
+    C["tm-tasks-app"]
+    D["tm-notifications-app"]
   end
   subgraph "Backend"
+    subgraph "API Gateway (Kong)"
+      L["Kong"]
+    end
     subgraph "Microservices"
       E["tm-auth-service"]
       F["tm-metrics-api"]
@@ -130,13 +133,11 @@ graph TD
       J["MongoDB"]
     end
   end
-  A --> B
-  A --> C
-  A --> D
-  B --> G -.-> E
-  C --> F -.-> E
-  D --> H -.-> E
-  G -- WebSockets --> B
+  A --> L
+  L --> E
+  L --> F
+  L --> G
+  L --> H
   E --> J
   F --> J
   G --> J
@@ -144,6 +145,12 @@ graph TD
   H -- Cronjob (Due Dates) --> I
   I -- Notifications Event --> G
   K["Mongo Express"] --> J
+  B -.-> A
+  C -.-> A
+  D -.-> A
+  D <--> G 
+
+
 ```
 
 # Notes
