@@ -14,6 +14,18 @@ services:
             config:
               second: 5  # Limit to 5 requests per second per consumer
               hour: 1000 # Limit to 1000 requests per hour per consumer
+  - name: tm-settings-api
+    url: http://tm-settings-api:3000 
+    routes:
+      - name: settings-route
+        paths:
+          - /settings
+        plugins:
+          # - name: tm-auth
+          - name: rate-limiting
+            config:
+              second: 5  # Limit to 5 requests per second per consumer
+              hour: 1000 # Limit to 1000 requests per hour per consumer
 
   - name: tm-metrics-api
     url: http://tm-metrics-api:3000

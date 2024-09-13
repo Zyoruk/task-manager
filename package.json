@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "nx": "nx",
-    "build:all": "concurrently \"nx build tm-auth-service\" \"nx build tm-core-app\" \"nx build tm-dashboard-app\" \"nx build tm-metrics-api\" \"nx build tm-notifications-api\" \"nx build tm-notifications-app\" \"nx build tm-tasks-api\" \"nx build tm-tasks-app\""
+    "build:all": "concurrently \"nx build tm-auth-service\" \"nx build tm-core-app\" \"nx build tm-dashboard-app\" \"nx build tm-metrics-api\" \"nx build tm-notifications-api\" \"nx build tm-notifications-app\" \"nx build tm-tasks-api\" \"nx build tm-tasks-app\" \"nx build tm-settings-api\""
   },
   "private": true,
   "dependencies": {

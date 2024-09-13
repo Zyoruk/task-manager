@@ -45,6 +45,18 @@ services:
       - mongodb # Likely needs MongoDB
     env_file:
       - ./apps/tm-tasks-api/.env
+  tm-settings-api:
+    build:
+      context: . # Build context is the monorepo root
+      dockerfile: ./apps/tm-settings-api/Dockerfile
+    ports:
+      - "3005:3000"
+    depends_on:
+      - tm-auth-service # Might need auth
+      - tm-notifications-api # Depends on notifications
+      - mongodb # Likely needs MongoDB
+    env_file:
+      - ./apps/tm-settings-api/.env
   # Microfrontends
   tm-core-app:  
     build:
