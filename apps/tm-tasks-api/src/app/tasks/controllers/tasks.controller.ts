@@ -37,7 +37,7 @@ import { DeletedTaskDTO } from '../../dto/deleted-task.dto';
 import { SortOrder } from '../../types/sort-options';
 
 @ApiTags('tasks')
-@Controller('tasks')
+@Controller()
 @UseInterceptors(UserContextInterceptor)
 export class TasksController {
   constructor(private tasksService: TasksService) {}
