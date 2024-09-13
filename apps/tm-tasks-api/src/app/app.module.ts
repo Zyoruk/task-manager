@@ -1,8 +1,5 @@
 import { Module, ValidationPipe } from '@nestjs/common';
 
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { ClientsModule, Transport } from '@nestjs/microservices';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from './auth/auth.module';
 import { HttpModule } from '@nestjs/axios';
@@ -10,24 +7,11 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtAuthGuard } from './auth/guards/jwt.guard';
 import { APP_PIPE } from '@nestjs/core';
 import { TasksModule } from './tasks/tasks.module';
+import { JobsModule } from './jobs/jobs.module';
 
-const mqUrls = [process.env.MQURL || 'amqp://localhost:5672'];
 
 @Module({
   imports: [
-    ClientsModule.register([
-      {
-        name: 'NOTIFICATIONS_SERVICE',
-        transport: Transport.RMQ,
-        options: {
-          urls: mqUrls,
-          queue: 'tm-notifications',
-          queueOptions: {
-            durable: false,
-          },
-        },
-      },
-    ]),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => {
@@ -46,11 +30,11 @@ const mqUrls = [process.env.MQURL || 'amqp://localhost:5672'];
     HttpModule,
     AuthModule,
     ConfigModule,
-    TasksModule
+    TasksModule,
+    JobsModule
   ],
-  controllers: [AppController],
+  controllers: [],
   providers: [
-    AppService,
     JwtAuthGuard,
     {
       provide: APP_PIPE, // Register the ValidationPipe globally
