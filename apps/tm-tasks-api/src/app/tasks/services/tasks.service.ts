@@ -9,13 +9,15 @@ import { IUser } from '../../types/user';
 import { UpdateTaskDTO } from '../../dto/update-task.dto';
 import { TaskStatus } from '../models/task-status';
 import { SortOrder as SortOrderOptions } from '../../types/sort-options';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class TasksService {
   constructor(
     @Inject('NOTIFICATIONS_SERVICE')
     public notificationsServiceClient: ClientProxy,
-    @InjectModel(Task.name) private taskModel: Model<Task>
+    @InjectModel(Task.name) private taskModel: Model<Task>,
+    configService: ConfigService
   ) {}
 
   async createNewTask(
@@ -46,6 +48,7 @@ export class TasksService {
       limit: number;
       status?: TaskStatus;
       sortByDueDate?: SortOrderOptions;
+      areDueInLastDays?: number;
     }
   ): Promise<Task[]> {
     const { page, limit, status, sortByDueDate } = options;
@@ -63,6 +66,12 @@ export class TasksService {
     const sortOptions: any = {};
     if (sortByDueDate) {
       sortOptions.dueDate = sortByDueDate === SortOrderOptions.ASC ? 1 : -1;
+    }
+
+    if (options.areDueInLastDays) { 
+      query.dueDate = {
+        $gte: new Date(Date.now() - options.areDueInLastDays * 24 * 60 * 60 * 1000),
+      };
     }
 
     try {
@@ -155,6 +164,32 @@ export class TasksService {
       return updatedTask;
     } catch (error) {
       Logger.error('Failed to update task');
+      Logger.debug(error);
+      throw new Error(error);
+    }
+  }
+
+  async getDue(
+    options?: {
+      areDueInNextHours?: number;
+    }
+  ): Promise<Task[]> {
+    const { areDueInNextHours = 24 } = options || {};
+    const query: any = {
+      dueDate: {
+        $lte: new Date(Date.now() + areDueInNextHours * 60 * 60 * 1000),
+      },
+      deleted: { $ne: true },
+    };
+
+    try {
+      const allTasks = await this.taskModel
+        .find(query)
+        .exec();
+
+      return allTasks;
+    } catch (error) {
+      Logger.error('Failed to get all tasks');
       Logger.debug(error);
       throw new Error(error);
     }
