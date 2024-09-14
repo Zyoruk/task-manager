@@ -1,23 +1,36 @@
 import { Controller, Logger } from '@nestjs/common';
-
-import { AppService } from './app.service';
-import { EventPattern, MessagePattern } from '@nestjs/microservices';
+import { MessagePattern, Payload, Transport } from '@nestjs/microservices';
+import { Server } from 'socket.io';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  private logger = new Logger(AppController.name);
 
-  @EventPattern('task')
-  async handleTaskEvent(data: any) {
-    Logger.log('eventpattern', data);
-    return this.appService.getData();
+  constructor(
+    private readonly server: Server, // Inject the Socket.IO server
+  ) {}
+
+  @MessagePattern('task', Transport.RMQ)
+  handleTaskEvent(@Payload() data: any) {
+    this.logger.log(`Received task event: ${JSON.stringify(data)}`);
+
+    if (data.action === 'due') {
+      this.handleDueTask(data.payload);
+    }
   }
 
-  @MessagePattern({
-    cmd: "update"
-  })
-  async handleTaskMessage(data: any) {
-    Logger.log('messagepattern',data);
-    return this.appService.getData();
+  @MessagePattern('setting', Transport.RMQ)
+  handleSettingEvent(@Payload() data: any) {
+    this.logger.log(`Received setting event: ${JSON.stringify(data)}`);
+  }
+
+  private async handleDueTask(data: any) {
+    // Access the setting directly from the message payload
+    if (data.enableNotifications) {
+      this.logger.log('Notifications are enabled for this task.')
+      this.server.emit('dueTask', data.task);
+    } else {
+      this.logger.log('Notifications are disabled for this task.');
+    }
   }
 }
