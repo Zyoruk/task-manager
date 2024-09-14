@@ -8,10 +8,11 @@ import { JwtAuthGuard } from './auth/guards/jwt.guard';
 import { APP_PIPE } from '@nestjs/core';
 import { TasksModule } from './tasks/tasks.module';
 import { JobsModule } from './jobs/jobs.module';
-
+import { CacheModule } from '@nestjs/cache-manager';
 
 @Module({
   imports: [
+    CacheModule.register(),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => {

@@ -9,7 +9,6 @@ import { IUser } from '../../types/user';
 import { UpdateTaskDTO } from '../../dto/update-task.dto';
 import { TaskStatus } from '../models/task-status';
 import { SortOrder as SortOrderOptions } from '../../types/sort-options';
-import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class TasksService {
@@ -17,7 +16,6 @@ export class TasksService {
     @Inject('NOTIFICATIONS_SERVICE')
     public notificationsServiceClient: ClientProxy,
     @InjectModel(Task.name) private taskModel: Model<Task>,
-    configService: ConfigService
   ) {}
 
   async createNewTask(
