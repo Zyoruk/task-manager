@@ -157,3 +157,6 @@ graph TD
 1. The `package.json` files inside each individual project are meant for Docker to know what to install per app. Do not install them locally.
 2. `Docker` is meant for built environments. Do not expect them to reflect your changes if you have not re-compiled.
 3. For development, you can adjust the dev compose file so that it only includes services or apps you won't change. You are expected to develop in your machine in watch mode and then point the URLs to the docker services. Typically, services would use the Docker host aliases instead of IPs. Change this to IPs when working on the service of interest.
+
+## Troubleshooting
+- Nx Daemon can fail time to time. You can run `nx reset` if that does not work you may also run `nx daemon --stop` and `nx daemon --start`. `nx repair` can come handy as well.
