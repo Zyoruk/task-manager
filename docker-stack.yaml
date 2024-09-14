@@ -1,0 +1,148 @@
+version: "3.7"
+
+services:
+  tm-auth-service:
+    build:  ./apps/tm-auth-service/Dockerfile
+    # No need to expose ports directly, Swarm will handle it
+    depends_on:
+      - mongodb
+    env_file:
+      - ./apps/tm-auth-service/.env 
+    deploy:
+      replicas: 3 
+      restart_policy:
+        condition: on-failure
+  tm-notifications-api:
+    build: ./apps/tm-notifications-api/Dockerfile
+    # No need to expose ports directly, Swarm will handle it
+    depends_on:
+      - mongodb
+    env_file:
+      - ./apps/tm-notifications-api/.env 
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+  tm-tasks-api:
+    build: ./apps/tm-tasks-api/Dockerfile
+    # No need to expose ports directly, Swarm will handle it
+    depends_on:
+      - mongodb
+    env_file:
+      - ./apps/tm-tasks-api/.env 
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+  tm-metrics-api:
+    build: ./apps/tm-metrics-api/Dockerfile
+    # No need to expose ports directly, Swarm will handle it
+    depends_on:
+      - mongodb
+    env_file:
+      - ./apps/tm-metrics-api/.env 
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+  # tm-core-app:
+  #   build:
+  #     context: .
+  #     dockerfile: ./apps/tm-core-app/Dockerfile
+  #   # No need to expose ports directly, Swarm will handle it
+  #   depends_on:
+  #     - mongodb
+  #   deploy:
+  #     replicas: 2
+  #     restart_policy:
+  #       condition: on-failure
+  # tm-dashboard-app:
+  #   build:
+  #     context: .
+  #     dockerfile: ./apps/tm-dashboard-app/Dockerfile
+  #   # No need to expose ports directly, Swarm will handle it
+  #   depends_on:
+  #     - mongodb
+  #   deploy:
+  #     replicas: 2
+  #     restart_policy:
+  #       condition: on-failure
+  # tm-tasks-app:
+  #   build:
+  #     context: .
+  #     dockerfile: ./apps/tm-tasks-app/Dockerfile
+  #   # No need to expose ports directly, Swarm will handle it
+  #   depends_on:
+  #     - mongodb
+  #   deploy:
+  #     replicas: 2
+  #     restart_policy:
+  #       condition: on-failure
+
+  # Message Queue (rabbitmq)
+  rabbitmq:
+    image: rabbitmq:3-management
+    # Expose ports if needed for external access
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    deploy:
+      replicas: 1 # Usually a single RabbitMQ instance is sufficient
+      placement:
+        constraints: [node.role == manager] # Run RabbitMQ on the manager node
+
+  # MongoDB (mongodb)
+  mongodb:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+      MONGO_INITDB_DATABASE: taskmanagerdb
+    volumes:
+      - ./provision/mongo/001_users.js:/docker-entrypoint-initdb.d/001_users.js:ro
+      - mongodb_data:/data/db
+    deploy:
+      replicas: 1 # Usually a single MongoDB instance is sufficient
+      placement:
+        constraints: [node.role == manager] # Run MongoDB on the manager node
+
+  # MongoDB Express (mongo-express)
+  mongo-express:  
+    image: mongo-express
+    restart: always
+    ports:
+      - "8081:8081"
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=mongodb
+      - ME_CONFIG_BASICAUTH_USERNAME=root
+      - ME_CONFIG_BASICAUTH_PASSWORD=example
+      - ME_CONFIG_MONGODB_PORT=27017
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=root
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=example
+    deploy:
+      replicas: 1
+      placement:
+        constraints: [node.role == manager] # Run MongoDB Express on the manager node
+
+  # Kong (kong) 
+
+  kong:
+    build: ./provision/kong/Dockerfile
+    # Expose Kong's ports on a Swarm published port
+    ports:
+      - "8080:8000" # Map host port 8080 to container port 8000
+      - "8443:8443"
+      - "8082:8001"
+    volumes:
+      - ./provision/kong/kong.yaml:/opt/kong/declarative/kong.yaml:ro
+    depends_on:
+      - tm-auth-service
+      - tm-tasks-api
+    deploy:
+      replicas: 1 # Start with one Kong instance, scale as needed
+      placement:
+        constraints: [node.role == manager] # Run Kong on the manager node
+
+volumes:
+  rabbitmq_data:
+  mongodb_data:
