@@ -9,6 +9,7 @@ import { AuthController } from './controllers/auth.controller';
 import { BlacklistedToken, BlacklistedTokenSchema } from './schemas/blacklisted-token.schema';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UserModule } from '../user/user.module';
+import { TokenController } from './controllers/token.controller';
 
 @Module({
   imports: [
@@ -25,7 +26,7 @@ import { UserModule } from '../user/user.module';
       inject: [ConfigService],
     }),
   ],
-  controllers: [AuthController],
+  controllers: [AuthController, TokenController],
   providers: [JwtStrategy, AuthService],
   exports: [AuthService, JwtStrategy]
 })
