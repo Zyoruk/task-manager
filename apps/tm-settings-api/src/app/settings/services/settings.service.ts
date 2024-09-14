@@ -34,11 +34,11 @@ export class SettingsService {
       setting: id,
       userContext,
     });
-  
+
     try {
       // 1. Find the setting by key
       let setting = await this.taskModel.findOne({ key: id });
-  
+
       // 2. If not found, create a new one
       if (!setting) {
         setting = new this.taskModel({
@@ -46,33 +46,32 @@ export class SettingsService {
           enabledForUsers: [userContext._id],
         });
         await setting.save();
-  
+
         this.notificationsServiceClient.emit('setting', {
           action: 'create',
           payload: setting,
           userContext,
         });
-  
+
         return setting;
       }
-  
+
       // 3. If found, update the enabledForUsers array
       setting.enabledForUsers.push(userContext._id);
       await setting.save();
-  
+
       this.notificationsServiceClient.emit('setting', {
         action: 'update',
         payload: setting,
         userContext,
       });
-  
+
       return setting;
     } catch (error) {
       Logger.error('Error setting setting:', error);
       throw error; // Re-throw or handle the error appropriately
     }
   }
-  
 
   async deleteSetting(id: string, userContext: IUser) {
     Logger.log('Attempting to delete setting:', {
@@ -91,6 +90,20 @@ export class SettingsService {
       action: 'delete',
       payload: setting,
       userContext,
+    });
+    return setting;
+  }
+
+  async getRawSetting(id: string) {
+    Logger.log('Attempting to get setting:', {
+      setting: id,
+    });
+    const setting = await this.taskModel.findOne({
+      key: id,
+    });
+    this.notificationsServiceClient.emit('setting', {
+      action: 'search',
+      payload: setting,
     });
     return setting;
   }

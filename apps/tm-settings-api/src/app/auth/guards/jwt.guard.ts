@@ -15,8 +15,18 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
       return false;
     }
     const token = authHeader.split(' ')[1];
-    const validateToken = await this.authService.validateToken(token);
-    Logger.debug('Token is valid: ' + validateToken);
-    return validateToken;
+    let validateToken = await this.authService.validateToken(token);
+    if (validateToken) {
+      Logger.debug('User token is valid: ' + validateToken);
+      return  validateToken;
+    }
+
+    validateToken = await this.authService.validateClientToken(token);
+    if (validateToken) {
+      Logger.debug('Client token is valid: ' + validateToken);
+      return  validateToken;
+    }
+    
+    return false;
   }
 }

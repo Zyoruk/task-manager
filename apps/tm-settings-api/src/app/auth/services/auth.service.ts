@@ -38,6 +38,30 @@ export class AuthService {
     }
   }
 
+  async validateClientToken(token: string): Promise<boolean> {
+    Logger.debug(token);
+    Logger.debug(this.url + '/oauth/validate_token');
+    Logger.log('Attempting to validate token')
+    try {
+      const isValid = await lastValueFrom(
+        this.httpService.get<boolean>(this.url + '/oauth/validate_token', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+      );
+
+      Logger.log('Token is valid:' + isValid.data);
+      if (isValid.data) {
+        return true;
+      }
+      return false;
+    } catch (error) {
+      Logger.error('Error validating token:', error.message);
+      return false;
+    }
+  }
+
   async getLoggerInUser(token: string): Promise<any> {
     try {
       const userData = await lastValueFrom(

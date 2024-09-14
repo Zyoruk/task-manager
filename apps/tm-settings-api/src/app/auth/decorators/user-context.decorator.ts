@@ -8,9 +8,6 @@ export const UserContext = createParamDecorator(
       'UserContext > user information: ' +
         JSON.stringify(request.userContext, null, 2)
     );
-    if (!request.userContext) {
-      throw new Error('User context not found');
-    }
     return request.userContext;
   }
 );

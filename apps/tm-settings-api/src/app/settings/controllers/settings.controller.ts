@@ -22,6 +22,14 @@ export class SettingsController {
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @ApiParam({ name: 'id', required: true, description: 'setting id' })
+  @Get('/raw/:id')
+  async getRawSetting(@Param('id') id: string) {
+    return this.settingsService.getRawSetting(id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiParam({ name: 'id', required: true, description: 'setting id' })
   @Post(':id')
   async setSetting(@Param('id') id: string, @UserContext() userContext: IUser) {
     return this.settingsService.setSetting(id, userContext);
