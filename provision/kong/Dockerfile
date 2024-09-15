@@ -19,5 +19,6 @@ ENTRYPOINT ["/entrypoint.sh"]
 EXPOSE 8000 8443 8001 8444 8002 8445 8003 8446 8004 8447
 STOPSIGNAL SIGQUIT
 HEALTHCHECK --interval=10s --timeout=10s --retries=10 CMD kong health
+VOLUME ["/opt/kong/declarative"]
 
 CMD ["kong", "docker-start"]
