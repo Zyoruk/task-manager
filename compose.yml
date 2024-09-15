@@ -4,16 +4,18 @@ services:
     build:
       context: . # Build context is the monorepo root
       dockerfile: ./apps/tm-auth-service/Dockerfile
+    image: localhost:5000/tm-auth-service:latest
     ports:
       - "3000:3000"
     depends_on:
       - mongodb # Auth service needs MongoDB
     env_file:
-      - ./apps/tm-auth-service/.env 
+      - ./apps/tm-auth-service/.env
   tm-metrics-api:
     build:
       context: . # Build context is the monorepo root
       dockerfile: ./apps/tm-metrics-api/Dockerfile
+    image: localhost:5000/tm-metrics-api:latest
     ports:
       - "3001:3000"
     depends_on:
@@ -25,6 +27,7 @@ services:
     build:
       context: . # Build context is the monorepo root
       dockerfile: ./apps/tm-notifications-api/Dockerfile
+    image: localhost:5000/tm-notifications-api:latest
     ports:
       - "3002:3000"
     depends_on:
@@ -37,6 +40,7 @@ services:
     build:
       context: . # Build context is the monorepo root
       dockerfile: ./apps/tm-tasks-api/Dockerfile
+    image: localhost:5000/tm-tasks-api:latest
     ports:
       - "3003:3000"
     depends_on:
@@ -49,6 +53,7 @@ services:
     build:
       context: . # Build context is the monorepo root
       dockerfile: ./apps/tm-settings-api/Dockerfile
+    image: localhost:5000/tm-settings-api:latest
     ports:
       - "3005:3000"
     depends_on:
@@ -58,10 +63,11 @@ services:
     env_file:
       - ./apps/tm-settings-api/.env
   # Microfrontends
-  tm-core-app:  
+  tm-core-app:
     build:
       context: . # Build context is the monorepo root
       dockerfile: ./apps/tm-core-app/Dockerfile
+    image: localhost:5000/tm-core-app:latest
     ports:
       - "4200:4200"
     depends_on:
@@ -90,8 +96,8 @@ services:
       - mongodb_data:/data/db
     ports:
       - 27017:27017
-  
-  mongo-express:  
+
+  mongo-express:
     image: mongo-express
     restart: always
     ports:
@@ -108,7 +114,7 @@ services:
     build:
       context: .
       dockerfile: ./provision/kong/Dockerfile
-    # image: kong/kong-gateway:latest
+    image: localhost:5000/kong:latest
     ports:
       - "8080:8000" # Expose Kong's proxy port
       - "8443:8443" # Expose Kong's HTTPS port (if using TLS)
@@ -119,7 +125,7 @@ services:
       # - ./provision/kong/plugins/tm-auth:/tmp/custom_plugins/tm-auth
     depends_on:
       - tm-auth-service # Kong likely needs to authenticate with auth service
-      - tm-tasks-api # Kong needs the tasks API to route traffic to it 
+      - tm-tasks-api # Kong needs the tasks API to route traffic to it
 
 volumes:
   rabbitmq_data:
