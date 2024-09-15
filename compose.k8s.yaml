@@ -679,7 +679,6 @@ data:
         }
     );
 ---
----
 # RabbitMQ Management UI Service
 apiVersion: v1
 kind: Service
@@ -693,4 +692,18 @@ spec:
     port: 15672
     targetPort: 15672
     name: management-http
+  type: LoadBalancer # Or NodePort if you're on a local cluster
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tm-core-app-service
+spec:
+  selector:
+    app: tm-core-app
+  ports:
+  - protocol: TCP
+    port: 4200
+    targetPort: 4200
+    name: tm-core-app-http
   type: LoadBalancer # Or NodePort if you're on a local cluster
