@@ -28,6 +28,7 @@ export class SettingsService {
 
     Logger.log('Attempting to retrieve setting from server: ' + id);
     try {
+      Logger.log('Retrieving setting from server: ' + this.url + `/raw/${id}`);
       const setting = await lastValueFrom(
         this.httpService.get<{ enabledForUsers: string[]}>(this.url + `/raw/${id}`, {
           headers: {
