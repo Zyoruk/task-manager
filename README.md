@@ -186,6 +186,7 @@ This application can be deployed to a Kubernetes cluster using the provided Kube
 - Kubectl configured to interact with your cluster.
 
 ### Deployment Steps
+Note: we left a `deploy.sh` script that can be used to deploy the application to a Kubernetes cluster. You can use this script to deploy the application to your cluster.
 
 1. **Build Docker Images:**
 
@@ -232,3 +233,37 @@ This application can be deployed to a Kubernetes cluster using the provided Kube
   ```bash
   kubectl scale deployment tm-tasks-api --replicas=3
   ````
+### Deleting the Deployment
+In order to delete the deployment you can simply  run the following command:
+```bash
+kubectl delete -f compose.k8s.yaml
+```
+This will delete all the resources that were created by the deployment.
+
+### Getting rid of the images
+If you want to delete the images that were created by the deployment you can run the following command:
+```bash
+docker rmi $(docker images | grep 'task-manager' | awk '{print $3}')
+```
+
+or if this is the only project you have you can run the following command:
+
+```bash
+docker image prune -a 
+```
+
+This will remove all the images that were created by the deployment.
+
+### Other useful commands
+There are some useful commands you can use:
+
+```bash
+kubectl get services # List all services in the cluster
+kubectl get deployments # List all deployments in the cluster
+kubectl get configmaps # List all configmaps in the cluster
+kubectl get pv # List all persistent volumes in the cluster
+kubectl get service <service-name> # Get details of a specific service
+kubectl get deployment <deployment-name> # Get details of a specific deployment
+kubectl get pods -l app=<app-name> # List all pods in the cluster. Replace <app-name> with the app name you want to filter by.
+kubectl get pod <pod-name> # Get details of a specific pod
+```
