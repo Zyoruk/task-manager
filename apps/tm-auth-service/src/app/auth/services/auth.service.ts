@@ -16,6 +16,7 @@ import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
+  private readonly logger = new Logger(AuthService.name);
   private get clientSecret() {
     return this.configService.get<string>('CLIENT_SECRET');
   }
@@ -33,36 +34,46 @@ export class AuthService {
   ) {}
 
   async validateUser(email: string, pass: string): Promise<User> {
+    this.logger.log(`Validating user: ${email}`);
     const user = await this.userService.findBy({ email });
+    this.logger.log(`User found: ${user}`);
     if (user && (await bcrypt.compare(pass, user.password))) {
+      this.logger.log('User validated');
       return user;
     }
+    this.logger.log('User not validated');
     return null;
   }
 
   async login(user: LoginUserDto) {
+    this.logger.log(`Logging in user: ${user.email}`);
     const accessToken = this.generateAccessToken(user);
+    this.logger.log(`Access token generated for user: ${user.email}`);
     return {
       access_token: accessToken,
     };
   }
 
   async register(user: CreateUserDto): Promise<User> {
+    this.logger.log(`Registering user: ${user.email}`);
     const hashedPassword = await bcrypt.hash(user.password, 10); // Hash the password
     const createdUser = this.userService.create({
       ...user,
       password: hashedPassword,
     });
+    this.logger.log(`User registered: ${user.email}`);
     return createdUser;
   }
 
   async logout(token: string, userEmail: string): Promise<void> {
+    this.logger.log(`Logging out user: ${userEmail}`);
     const blacklistedToken = new this.blacklistedTokenModel({
       token,
       exp: new Date(Date.now() + 1000 * 60 * 60),
     });
     try {
       await blacklistedToken.save();
+      this.logger.log(`User logged out: ${userEmail}`);
     } catch (error) {
       if (error.code === 11000) {
         // do nothing; token is blacklisted and this scenario is likely an edge case in dev
@@ -78,6 +89,7 @@ export class AuthService {
   }
 
   generateAccessToken(user: any): string {
+    this.logger.log(`Generating access token for user: ${user.email}`);
     const payload = { email: user.email, sub: user._id, userId: user.userId };
     return this.jwtService.sign(payload, { expiresIn: '1h' }); // Short-lived access token
   }
@@ -85,9 +97,10 @@ export class AuthService {
   generateClientToken(user: ClientCredentialsDto) {
     const payload = { sub: user.client_id };
     if (user.client_secret !== this.clientSecret || !this.supportedClients.includes(user.client_id)) {
-      Logger.log('Invalid client secret');
+      this.logger.log('Invalid client secret');
       return false;
     }
+    this.logger.log(`Generating client token for client: ${user.client_id}`);
     return this.jwtService.sign(payload, {
       expiresIn: '1h',
       secret: this.clientSecret,

@@ -7,7 +7,12 @@ import { UserService } from '../../user/services/user.service';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-  constructor(private authService: AuthService, private configService: ConfigService, private userService: UserService) {
+  private readonly logger = new Logger(JwtStrategy.name);
+  constructor(
+    private authService: AuthService,
+    private configService: ConfigService,
+    private userService: UserService
+  ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
@@ -18,16 +23,17 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   async validate(payload: any) {
     const isValid = await this.authService.validateToken(payload.token); // Check blacklist
     if (!isValid) {
-      console.log('Invalid token')
+      this.logger.log('Invalid token');
       throw new UnauthorizedException('Invalid token');
     }
-    Logger.log('Pyload' + payload)
+    this.logger.log('Payload' + payload);
     // Fetch the complete user object based on the payload
-    const user = await this.userService.findUserById(payload.sub); 
+    const user = await this.userService.findUserById(payload.sub);
     if (!user) {
+      this.logger.log('User not found');
       throw new UnauthorizedException('user not found');
     }
-    
+    this.logger.log('User found' + user);
     return {
       _id: user._id,
       userId: user.userId,

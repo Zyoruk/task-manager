@@ -12,6 +12,7 @@ import { SortOrder as SortOrderOptions } from '../../types/sort-options';
 
 @Injectable()
 export class TasksService {
+  private readonly logger = new Logger(TasksService.name);
   constructor(
     @Inject('NOTIFICATIONS_SERVICE')
     public notificationsServiceClient: ClientProxy,
@@ -22,7 +23,7 @@ export class TasksService {
     task: CreateTaskDTO & { reportedBy: string },
     userContext: IUser
   ) {
-    Logger.log(task);
+    this.logger.log(task);
     const newTask = new this.taskModel({ ...task, taskId: randomUUID() });
     try {
       await newTask.save();
@@ -33,8 +34,8 @@ export class TasksService {
       });
       return newTask;
     } catch (error) {
-      Logger.error('Failed to create task');
-      Logger.debug(error);
+      this.logger.error('Failed to create task');
+      this.logger.debug(error);
       throw new Error(error);
     }
   }
@@ -66,7 +67,7 @@ export class TasksService {
       sortOptions.dueDate = sortByDueDate === SortOrderOptions.ASC ? 1 : -1;
     }
 
-    if (options.areDueInLastDays) { 
+    if (options.areDueInLastDays) {
       query.dueDate = {
         $gte: new Date(Date.now() - options.areDueInLastDays * 24 * 60 * 60 * 1000),
       };
@@ -82,8 +83,8 @@ export class TasksService {
 
       return allTasks;
     } catch (error) {
-      Logger.error('Failed to get all tasks');
-      Logger.debug(error);
+      this.logger.error('Failed to get all tasks');
+      this.logger.debug(error);
       throw new Error(error);
     }
   }
@@ -116,8 +117,8 @@ export class TasksService {
       });
       return { deletedCount: 1 }; // Indicate successful soft delete
     } catch (error) {
-      Logger.error('Failed to delete task');
-      Logger.debug(error);
+      this.logger.error('Failed to delete task');
+      this.logger.debug(error);
       throw new Error(error);
     }
   }
@@ -135,8 +136,8 @@ export class TasksService {
       });
       return task;
     } catch (error) {
-      Logger.error('Failed to get task');
-      Logger.debug(error);
+      this.logger.error('Failed to get task');
+      this.logger.debug(error);
       throw new Error(error);
     }
   }
@@ -161,8 +162,8 @@ export class TasksService {
       });
       return updatedTask;
     } catch (error) {
-      Logger.error('Failed to update task');
-      Logger.debug(error);
+      this.logger.error('Failed to update task');
+      this.logger.debug(error);
       throw new Error(error);
     }
   }
@@ -187,8 +188,8 @@ export class TasksService {
 
       return allTasks;
     } catch (error) {
-      Logger.error('Failed to get all tasks');
-      Logger.debug(error);
+      this.logger.error('Failed to get all tasks');
+      this.logger.debug(error);
       throw new Error(error);
     }
   }

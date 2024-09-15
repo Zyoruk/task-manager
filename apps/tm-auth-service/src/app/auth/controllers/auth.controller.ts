@@ -12,7 +12,6 @@ import {
 import { AuthService } from '../services/auth.service';
 import { CreateUserDto } from '../../user/dto/create-user.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { UserService } from '../../user/services/user.service';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { LoginUserDto } from '../../user/dto/login-user.dto';
 import { Response } from 'express';
@@ -21,9 +20,9 @@ import { ThrottlerGuard } from '@nestjs/throttler';
 @Controller()
 @ApiTags('auth')
 export class AuthController {
+  private readonly logger = new Logger(AuthController.name);
   constructor(
     private authService: AuthService,
-    private userService: UserService
   ) {}
 
   @ApiOperation({ summary: 'Login user' })
@@ -55,7 +54,7 @@ export class AuthController {
     if (!user) {
       throw new UnauthorizedException();
     }
-    
+
     const tokens = await this.authService.login(user);
     return res.status(200).send(tokens);
   }
@@ -65,7 +64,7 @@ export class AuthController {
     required: true,
     description: 'User details',
     schema: {
-        properties: { 
+        properties: {
             email: {
                 type: "string",
                 format: "email"
@@ -93,8 +92,8 @@ export class AuthController {
     try {
       const newUser = await this.authService.register(createUserDto);
       return res.status(200).send(newUser);
-    } catch (error) { 
-      Logger.log('Failed to create user');
+    } catch (error) {
+      this.logger.log('Failed to register user');
       return res.status(400).send({ message: 'Failed to create user', error });
     }
   }
@@ -111,10 +110,10 @@ export class AuthController {
   @Get('validate_token')
   @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt')) // Protect the validate_token route
-  async validateToken(@Req() req: any)  { 
-    Logger.log('Validating token:')
+  async validateToken(@Req() req: any)  {
+    this.logger.log('Validating token:')
     const token = req.headers.authorization?.split(' ')[1]; // Get token from header
-    Logger.log('Token:' + token)
+    this.logger.log('Token found. Validating...')
     return this.authService.validateToken(token);
   }
 }

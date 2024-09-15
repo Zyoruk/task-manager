@@ -7,6 +7,7 @@ import { CACHE_MANAGER } from '@nestjs/cache-manager';
 
 @Injectable()
 export class SettingsService {
+  private readonly logger = new Logger(SettingsService.name);
   private get url(): string {
     return this.configService.get<string>('SETTINGS_SERVICE');
   }
@@ -22,13 +23,13 @@ export class SettingsService {
     const cachedSetting = await this.cacheManager.get<string[]>(cacheKey);
 
     if (cachedSetting) {
-      Logger.log(`Retrieved setting from cache: ${id}`);
+      this.logger.log(`Retrieved setting from cache: ${id}`);
       return cachedSetting;
     }
 
-    Logger.log('Attempting to retrieve setting from server: ' + id);
+    this.logger.log('Attempting to retrieve setting from server: ' + id);
     try {
-      Logger.log('Retrieving setting from server: ' + this.url + `/raw/${id}`);
+      this.logger.log('Retrieving setting from server: ' + this.url + `/raw/${id}`);
       const setting = await lastValueFrom(
         this.httpService.get<{ enabledForUsers: string[]}>(this.url + `/raw/${id}`, {
           headers: {
@@ -37,14 +38,14 @@ export class SettingsService {
         })
       );
 
-      Logger.log('Retrieved setting from server: ' + setting.data);
+      this.logger.log('Retrieved setting from server: ' + setting.data);
       if (setting?.data?.enabledForUsers) {
         await this.cacheManager.set(cacheKey, setting.data.enabledForUsers);
         return setting.data.enabledForUsers;
       }
       return [];
     } catch (error) {
-      Logger.error('Error retrieving setting:', error.message);
+      this.logger.error('Error retrieving setting:', error.message);
       return [];
     }
   }

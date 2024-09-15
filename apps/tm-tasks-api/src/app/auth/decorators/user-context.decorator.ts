@@ -4,7 +4,8 @@ import { Request } from 'express';
 export const UserContext = createParamDecorator(
   (data: unknown, ctx: ExecutionContext) => {
     const request: Request = ctx.switchToHttp().getRequest();
-    Logger.log(
+    const logger = new Logger(UserContext.name);
+    logger.log(
       'UserContext > user information: ' +
         JSON.stringify(request.userContext, null, 2)
     );

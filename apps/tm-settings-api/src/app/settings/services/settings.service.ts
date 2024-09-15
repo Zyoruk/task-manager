@@ -7,13 +7,14 @@ import { ClientProxy } from '@nestjs/microservices';
 
 @Injectable()
 export class SettingsService {
+  private readonly logger = new Logger(SettingsService.name);
   constructor(
     @InjectModel(FeatureFlag.name) private taskModel: Model<FeatureFlag>,
     @Inject('NOTIFICATIONS_SERVICE')
     public notificationsServiceClient: ClientProxy
   ) {}
   async getSetting(id: string, userContext: IUser) {
-    Logger.log('Attempting to get setting:', {
+    this.logger.log('Attempting to get setting:', {
       setting: id,
       userContext,
     });
@@ -30,7 +31,7 @@ export class SettingsService {
   }
 
   async setSetting(id: string, userContext: IUser) {
-    Logger.log('Attempting to set setting:', {
+    this.logger.log('Attempting to set setting:', {
       setting: id,
       userContext,
     });
@@ -68,13 +69,13 @@ export class SettingsService {
 
       return setting;
     } catch (error) {
-      Logger.error('Error setting setting:', error);
+      this.logger.error('Error setting setting:', error);
       throw error; // Re-throw or handle the error appropriately
     }
   }
 
   async deleteSetting(id: string, userContext: IUser) {
-    Logger.log('Attempting to delete setting:', {
+    this.logger.log('Attempting to delete setting:', {
       setting: id,
       userContext,
     });
@@ -95,7 +96,7 @@ export class SettingsService {
   }
 
   async getRawSetting(id: string) {
-    Logger.log('Attempting to get setting:', {
+    this.logger.log('Attempting to get setting:', {
       setting: id,
     });
     const setting = await this.taskModel.findOne({

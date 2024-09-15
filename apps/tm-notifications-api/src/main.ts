@@ -34,7 +34,7 @@ async function bootstrap() {
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);
   const port = process.env.PORT || 3000;
-  const httpServer = await app.listen(port);
+  await app.listen(port);
   await mqMicroservice.listen();
   Logger.log(
     `🚀 HTTP Application is running on: http://localhost:${port}/${globalPrefix}`

@@ -7,7 +7,7 @@ import { AuthService } from '../services/auth.service';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-
+  private readonly logger = new Logger(JwtStrategy.name);
   constructor(
     private httpService: HttpService,
     private configService: ConfigService,
@@ -21,14 +21,14 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: any) {
-    Logger.error(payload);
+    this.logger.error(payload);
     try {
       const isValid = await this.authService.validateToken(payload.token);
-      Logger.error(isValid);
+      this.logger.error(isValid);
       if (!isValid) {
         throw new UnauthorizedException('Invalid token');
       }
-      Logger.log(JSON.stringify(payload, null, 2))
+      this.logger.log(JSON.stringify(payload, null, 2))
       return {
         _id: payload._id,
         userId: payload.userId,
@@ -37,7 +37,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         lastName: payload.lastName,
       };
     } catch (error) {
-      Logger.error(error);
+      this.logger.error(error);
       throw new UnauthorizedException('Error validating token');
     }
   }

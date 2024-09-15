@@ -7,13 +7,14 @@ import { Request } from 'express';
 
 @Controller()
 export class AppController {
+  private readonly logger = new Logger(AppController.name);
   constructor(private readonly appService: AppService) {}
 
   @Get("/me")
   @UseGuards(AuthGuard('jwt'))
   @ApiBearerAuth()
   getData(@Req() req: Request) {
-    Logger.log({msg: 'getDataController', user: req.user})
+    this.logger.log({msg: 'getDataController', user: req.user})
     return req.user;
   }
 }

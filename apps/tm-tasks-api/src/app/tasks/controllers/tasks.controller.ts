@@ -40,6 +40,7 @@ import { SortOrder } from '../../types/sort-options';
 @Controller()
 @UseInterceptors(UserContextInterceptor)
 export class TasksController {
+  private readonly logger = new Logger(TasksController.name);
   constructor(private tasksService: TasksService) {}
 
   @Post()
@@ -111,8 +112,8 @@ export class TasksController {
   })
   async getAllTasks(
     @UserContext() userContext: IUser,
-    @Query('page') page: number = 1,
-    @Query('limit') limit: number = 10,
+    @Query('page') page = 1,
+    @Query('limit') limit = 10,
     @Query('status') status?: TaskStatus,
     @Query('sortByDueDate') sortByDueDate?: SortOrder
   ): Promise<TaskDTO[]> {
@@ -149,8 +150,8 @@ export class TasksController {
         `Task ${taskId} not found`,
         HttpStatusCode.NotFound
       );
-    Logger.log(`Deleted task ${taskId}`);
-    Logger.debug(deleted);
+    this.logger.log(`Deleted task ${taskId}`);
+    this.logger.debug(deleted);
     return { taskId };
   }
 
@@ -177,8 +178,8 @@ export class TasksController {
       );
       return TaskDTO.mapFromModel(updatedTask);
     } catch (error) {
-      Logger.error('Failed to update task');
-      Logger.debug(error);
+      this.logger.error('Failed to update task');
+      this.logger.debug(error);
       throw new Error(error);
     }
   }
@@ -201,8 +202,8 @@ export class TasksController {
       const foundTask = await this.tasksService.getTask(taskId, userContext);
       return TaskDTO.mapFromModel(foundTask);
     } catch (error) {
-      Logger.error('Failed to get task');
-      Logger.debug(error);
+      this.logger.error('Failed to get task');
+      this.logger.debug(error);
       throw new Error(error);
     }
   }
