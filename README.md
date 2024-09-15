@@ -2,7 +2,7 @@
 
 ## Overview
 
-This repository contains a full-stack Task Manager application built with Angular, NestJS, and a microservices architecture. It leverages Nx for monorepo management and Docker Compose for streamlined development and deployment.
+This repository contains a full-stack Task Manager application built with Angular, NestJS, and a microservices architecture. It leverages Nx for monorepo management and Docker Compose for streamlined development and deployment. Kong API Gateway manages and secures access to the microservices, including real-time communication via WebSockets.
 
 ## Getting Started
 
@@ -45,6 +45,7 @@ This will build and start all services defined in docker-compose.yml.
 - Task Manager UI (tm-core-app): http://localhost:4200
 - RabbitMQ Management UI: http://localhost:15672 (default credentials: guest/guest)
 - Mongo Express: http://localhost:8081 (credentials: root/example)
+- Kong API Gateway: http://localhost:8000 (For Admin API - see Kong documentation for details)
 
 ### Development
 #### Running a Specific App
@@ -93,25 +94,25 @@ The application is structured as an Nx workspace, with code organized into apps 
 **Key Components:**
 
 - **Microfrontends:**
-    - `tm-core-app`: The main user interface for interacting with the Task Manager.
+    - `tm-core-app`: The main user interface for interacting with the Task Manager. This application connects to Kong for real-time notifications.
     - `tm-dashboard-app`: (Potentially) A separate dashboard for analytics or admin tasks.
     - `tm-notifications-app`: (Potentially) A dedicated UI for managing notifications.
     - `tm-tasks-app`: (Potentially) A focused interface for task-related actions.
 - **Microservices:**
     - `tm-auth-service`: Handles user authentication and authorization.
     - `tm-metrics-api`: Provides API endpoints for application metrics.
-    - `tm-notifications-api`: Manages notifications related to tasks.
+    - `tm-notifications-api`: Manages notifications related to tasks. Kong exposes a WebSocket endpoint for real-time updates from this service.
     - `tm-tasks-api`: Exposes API endpoints for managing tasks.
 - **Infrastructure:**
     - `rabbitmq`: Message queue for asynchronous communication between microservices.
     - `mongodb`: Primary database for storing application data.
     - `mongo-express`: Web-based UI for managing the MongoDB database.
-
+    - `kong`: API Gateway for routing traffic, including WebSocket connections, to the microservices.
 
 ### Architecture Diagram
 
 ```mermaid
-graph TD
+graph LR
   subgraph "Client (Browser)"
     A["tm-core-app"]
     B["tm-dashboard-app"]
@@ -133,7 +134,7 @@ graph TD
       J["MongoDB"]
     end
   end
-  A --> L
+  A --> L 
   L --> E
   L --> F
   L --> G
@@ -148,9 +149,7 @@ graph TD
   B -.-> A
   C -.-> A
   D -.-> A
-  D <--> G 
-
-
+  D <--> L -.- Websocket --> G 
 ```
 
 # Notes
