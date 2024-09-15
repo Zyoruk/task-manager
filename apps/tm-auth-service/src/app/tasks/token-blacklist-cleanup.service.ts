@@ -14,7 +14,7 @@ export class TokenCleanupService {
   ) {}
 
   // every hour
-  @Cron(CronExpression.EVERY_2_HOURS)
+  @Cron(CronExpression.EVERY_HOUR)
   async handleCron() {
     this.logger.debug('Starting blacklisted token cleanup...');
 

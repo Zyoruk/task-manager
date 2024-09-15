@@ -17,7 +17,7 @@ export class TaskReminderService {
     private readonly authService: AuthService
   ) {}
 
-  @Cron(CronExpression.EVERY_10_SECONDS) // Run every hour
+  @Cron(CronExpression.EVERY_HOUR)
   async sendTaskReminders() {
     this.logger.debug('Checking for tasks due soon...');
     let token: string;
