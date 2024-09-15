@@ -7,7 +7,7 @@ import {
   HttpCode,
   Get,
   Req,
-  Query
+  Query,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { AuthService } from '../services/auth.service'; // Adjust the path if needed
@@ -23,7 +23,7 @@ export class TokenController {
   async issueToken(
     @Res() res: Response,
     @Body() credentials: ClientCredentialsDto
-  ): Promise<any> {
+  ): Promise<Response<{ access_token: string; token_type: string } | { error: string }>> {
     const token = this.authService.generateClientToken(credentials);
 
     if (!token) {
@@ -37,7 +37,10 @@ export class TokenController {
 
   @Get('validate_token')
   @ApiBearerAuth()
-  async validateToken(@Req() req: Request, @Query('token') tokenParam): Promise<any> {
+  async validateToken(
+    @Req() req: Request,
+    @Query('token') tokenParam: string
+  ): Promise<boolean> {
     const token = req.headers.authorization?.split(' ')[1] || tokenParam; // Get token from header
     return this.authService.validateClientToken(token);
   }

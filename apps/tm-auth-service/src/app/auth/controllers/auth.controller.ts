@@ -14,7 +14,7 @@ import { CreateUserDto } from '../../user/dto/create-user.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { LoginUserDto } from '../../user/dto/login-user.dto';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { ThrottlerGuard } from '@nestjs/throttler';
 
 @Controller()
@@ -101,16 +101,16 @@ export class AuthController {
   @Post('logout')
   @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt')) // Protect the logout route
-  async logout(@Req() req: any, @Res() res: any) {
+  async logout(@Req() req: Request, @Res() res: Response) {
     const token = req.headers.authorization?.split(' ')[1]; // Get token from header
-    await this.authService.logout(token, req.user.email);
+    await this.authService.logout(token, req.userContext.email);
     return res.status(200).json({ message: 'Logout successful' });
   }
 
   @Get('validate_token')
   @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt')) // Protect the validate_token route
-  async validateToken(@Req() req: any)  {
+  async validateToken(@Req() req: Request)  {
     this.logger.log('Validating token:')
     const token = req.headers.authorization?.split(' ')[1]; // Get token from header
     this.logger.log('Token found. Validating...')
