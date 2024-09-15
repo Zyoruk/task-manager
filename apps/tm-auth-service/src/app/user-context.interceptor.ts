@@ -6,7 +6,7 @@ export class UserContextInterceptor implements NestInterceptor {
   private readonly logger = new Logger(UserContextInterceptor.name);
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const request = context.switchToHttp().getRequest();
-    this.logger.log("User data found: ", JSON.stringify(request.user, null, 2));
+    this.logger.log("User data found: ", request.user);
     const user = request.user || {}; // Assuming your JWT strategy attaches the user object to the request
 
     // Set the user context in a way that's accessible throughout your application

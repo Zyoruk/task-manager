@@ -48,8 +48,7 @@ export class TaskReminderService {
     }
 
     const dueTasks = await this.tasksService.getDue(); // Get tasks due within 24 hours
-    this.logger.log(`Found ${dueTasks.length} tasks due soon`);
-    this.logger.debug(JSON.stringify(dueTasks, null, 2));
+    this.logger.log(`Found ${dueTasks.length} tasks due soon`, dueTasks);
     for (const task of dueTasks) {
       try {
         if (task.assignedTo) {

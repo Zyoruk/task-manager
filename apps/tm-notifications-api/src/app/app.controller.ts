@@ -12,7 +12,7 @@ export class AppController {
 
   @MessagePattern('task', Transport.RMQ)
   handleTaskEvent(@Payload() data: any) {
-    this.logger.log(`Received task event: ${JSON.stringify(data)}`);
+    this.logger.log(`Received task event`, data);
 
     if (data.action === 'due') {
       this.handleDueTask(data.payload);
@@ -21,7 +21,7 @@ export class AppController {
 
   @MessagePattern('setting', Transport.RMQ)
   handleSettingEvent(@Payload() data: any) {
-    this.logger.log(`Received setting event: ${JSON.stringify(data)}`);
+    this.logger.log(`Received setting event`, data);
   }
 
   private async handleDueTask(data: any) {

@@ -26,7 +26,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       if (!isValid) {
         throw new UnauthorizedException('Invalid token');
       }
-      this.logger.log(JSON.stringify(payload, null, 2));
+      this.logger.log('Token is valid', payload)
       return {
         _id: payload._id,
         userId: payload.userId,

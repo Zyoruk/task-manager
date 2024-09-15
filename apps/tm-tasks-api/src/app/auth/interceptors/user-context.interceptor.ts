@@ -22,7 +22,7 @@ export class UserContextInterceptor implements NestInterceptor {
     const userData = await this.authService.getLoggerInUser(token);
     // Set the user context in a way that's accessible throughout your application
     request.userContext = userData;
-    this.logger.log('Injected User Data: ' + JSON.stringify(request.userContext, null, 2));
+    this.logger.log('Injected User Data: ', request.userContext);
     return next.handle();
   }
 }
