@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Logger, Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { HttpModule } from '@nestjs/axios';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -8,6 +8,11 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => {
+        Logger.log(configService.get('MONGODB_USER'));
+
+        Logger.log(configService.get('MONGODB_HOST'));
+        Logger.log(configService.get('MONGODB_PORT'));
+        Logger.log(configService.get('MONGODB_TASKS_DB'));
         return {
           uri: `mongodb://${configService.get(
             'MONGODB_USER'

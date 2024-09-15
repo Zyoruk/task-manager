@@ -1,4 +1,4 @@
-import { Module, ValidationPipe } from '@nestjs/common';
+import { Logger, Module, ValidationPipe } from '@nestjs/common';
 
 import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from './auth/auth.module';
@@ -16,6 +16,11 @@ import { CacheModule } from '@nestjs/cache-manager';
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => {
+        Logger.log(configService.get('MONGODB_USER'));
+
+        Logger.log(configService.get('MONGODB_HOST'));
+        Logger.log(configService.get('MONGODB_PORT'));
+        Logger.log(configService.get('MONGODB_TASKS_DB'));
         return {
           uri: `mongodb://${configService.get(
             'MONGODB_USER'
