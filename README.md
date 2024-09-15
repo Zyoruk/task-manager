@@ -37,7 +37,7 @@ This repository contains a full-stack Task Manager application built with Angula
 1. Start the application using Docker Compose:
 
    ```
-   $ docker-compose up -d
+   $ docker compose up -d
    ```
 
 This will build and start all services defined in docker-compose.yml.
