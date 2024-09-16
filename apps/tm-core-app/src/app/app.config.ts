@@ -5,7 +5,7 @@ import {
 } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { appRoutes } from './app.routes';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import {
   ActionReducer,
   ActionReducerMap,
@@ -18,6 +18,7 @@ import { AuthEffects } from './store/auth/auth.effects';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from './environments/environment'; // Import your environment
 import { localStorageSync } from 'ngrx-store-localstorage';
+import { authInterceptor } from './interceptors/auth.interceptor';
 
 const reducers: ActionReducerMap<any> = { auth: authReducer };
 
@@ -32,7 +33,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(appRoutes),
-    provideHttpClient(),
+    provideHttpClient(withInterceptors([authInterceptor])),
     importProvidersFrom(
       StoreModule.forRoot(reducers, { metaReducers }), // Register the auth reducer
       EffectsModule.forRoot([AuthEffects]), // Register the effects
