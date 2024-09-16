@@ -38,7 +38,7 @@ export class AuthGuard implements CanActivate {
         }
 
         // Validate the token
-        return this.loginService.validateToken(accessToken).pipe(
+        return this.loginService.validateToken().pipe(
           map((response) => {
             if (response) {
               // Token is valid, allow access

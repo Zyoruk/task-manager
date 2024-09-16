@@ -49,6 +49,6 @@ export class TmLoginService {
   }
 
   validateToken(): Observable<ValidateTokenResponse> {
-    return this.http.post<ValidateTokenResponse>(`${this.apiUrl}/validate-token`, {});
+    return this.http.get<ValidateTokenResponse>(`${this.apiUrl}/validate_token`);
   }
 }
