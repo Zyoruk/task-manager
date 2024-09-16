@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { HomeComponent } from './home.component';
+import { TmMetricsAppComponent } from './tm-metrics-app.component';
 
-describe('HomeComponent', () => {
-  let component: HomeComponent;
-  let fixture: ComponentFixture<HomeComponent>;
+describe('TmMetricsAppComponent', () => {
+  let component: TmMetricsAppComponent;
+  let fixture: ComponentFixture<TmMetricsAppComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HomeComponent]
+      imports: [TmMetricsAppComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(HomeComponent);
+    fixture = TestBed.createComponent(TmMetricsAppComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

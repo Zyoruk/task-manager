@@ -4,6 +4,7 @@ import { TmLoginService, Credentials } from '../services/tm-login.service';
 import { FormsModule } from '@angular/forms'; // Import FormsModule
 import { loginSuccess } from '../store/auth/auth.actions';
 import { Store } from '@ngrx/store';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-tm-login',
@@ -17,7 +18,11 @@ export class TmLoginComponent {
   credentials: Credentials = { email: '', password: '' };
   errorMessage: string = '';
 
-  constructor(private loginService: TmLoginService, private store: Store) {}
+  constructor(
+    private loginService: TmLoginService,
+    private store: Store,
+    private router: Router
+  ) {}
 
   login(): void {
     this.loginService.login(this.credentials).subscribe({
@@ -27,6 +32,7 @@ export class TmLoginComponent {
           loginSuccess({ accessToken: response.access_token })
         );
         console.log('Login successful:', response);
+        this.router.navigate(['dashboard']);
       },
       error: (error) => {
         // Handle login error (e.g., display error message)
