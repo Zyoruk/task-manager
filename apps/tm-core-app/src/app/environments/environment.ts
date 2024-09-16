@@ -1,4 +1,4 @@
 export const environment = {
   production: false,
-  apiUrl: 'http://kong:8000/auth' // Your development API URL
+  apiUrl: 'http://localhost:8080/auth' // Your development API URL
 };

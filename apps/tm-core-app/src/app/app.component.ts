@@ -1,11 +1,10 @@
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { NxWelcomeComponent } from './nx-welcome.component';
 import { TmLoginComponent } from './tm-login/tm-login.component';
 
 @Component({
   standalone: true,
-  imports: [NxWelcomeComponent, RouterModule, TmLoginComponent],
+  imports: [RouterModule, TmLoginComponent],
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
