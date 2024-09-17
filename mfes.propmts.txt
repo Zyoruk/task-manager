@@ -42,7 +42,7 @@ Considerations:
 
 WebSocket Library: Use a suitable WebSocket library for your chosen framework (e.g., Socket.IO, SockJS).
 Notification Library: Consider using a toast notification library (e.g., React Toastify, Snotify) for a polished look and feel.
-4. tm-metrics-app (Metrics Dashboard)
+4. tm-dashboard-app (Metrics Dashboard)
 
 Responsibilities:
 
@@ -95,7 +95,7 @@ State Management:
 If you anticipate complex state interactions between microfrontends or need the robust features of NgRx, use it for centralized state management.
 If you prefer a simpler approach, consider Zustand or leverage RxJS for state management within tm-core-app.
 Base Components: Implement your authentication, error page, and layout components as Angular components within tm-core-app.
-tm-tasks-app, tm-notifications-app, tm-metrics-app:
+tm-tasks-app, tm-notifications-app, tm-dashboard-app:
 
 Module Federation: Configure these as separate Angular applications within your Nx monorepo, using Module Federation to load them dynamically into your main application shell.
 Communication:
