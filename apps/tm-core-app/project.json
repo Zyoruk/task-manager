@@ -7,7 +7,7 @@
   "tags": [],
   "targets": {
     "build": {
-      "executor": "@angular-devkit/build-angular:browser",
+      "executor": "@nx/angular:webpack-browser",
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/apps/tm-core-app",
@@ -23,7 +23,10 @@
           }
         ],
         "styles": ["apps/tm-core-app/src/styles.scss"],
-        "scripts": []
+        "scripts": [],
+        "customWebpackConfig": {
+          "path": "apps/tm-core-app/webpack.config.ts"
+        }
       },
       "configurations": {
         "production": {
@@ -40,12 +43,9 @@
             }
           ],
           "outputHashing": "all",
-          "fileReplacements": [
-            {
-              "replace": "apps/tm-core-app/src/app/environments/environment.ts",
-              "with": "apps/tm-core-app/src/app/environments/environment.prod.ts"
-            }
-          ]
+          "customWebpackConfig": {
+            "path": "apps/tm-core-app/webpack.prod.config.ts"
+          }
         },
         "development": {
           "buildOptimizer": false,
@@ -59,7 +59,11 @@
       "defaultConfiguration": "production"
     },
     "serve": {
-      "executor": "@angular-devkit/build-angular:dev-server",
+      "executor": "@nx/angular:module-federation-dev-server",
+      "options": {
+        "port": 4200,
+        "publicHost": "http://localhost:4200"
+      },
       "configurations": {
         "production": {
           "buildTarget": "tm-core-app:build:production"

@@ -15,7 +15,19 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@task-manager/tm-ui": ["./lib/tm-ui/src/index.ts"]
+      "@task-manager/tm-ui": ["./lib/tm-ui/src/index.ts"],
+      "tm-dashboard-app/Routes": [
+        "apps/tm-dashboard-app/src/app/remote-entry/entry.routes.ts"
+      ],
+      "tm-notifications-app/Routes": [
+        "apps/tm-notifications-app/src/app/remote-entry/entry.routes.ts"
+      ],
+      "tm-settings-app/Routes": [
+        "apps/tm-settings-app/src/app/remote-entry/entry.routes.ts"
+      ],
+      "tm-tasks-app/Routes": [
+        "apps/tm-tasks-app/src/app/remote-entry/entry.routes.ts"
+      ]
     }
   },
   "exclude": ["node_modules", "tmp"]

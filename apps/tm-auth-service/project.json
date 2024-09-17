@@ -3,6 +3,7 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/tm-auth-service/src",
   "projectType": "application",
+  "implicitDependencies": ["tm-tasks-app"],
   "tags": [],
   "targets": {
     "serve": {
