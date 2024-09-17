@@ -1,4 +1,79 @@
 services:
+  # Microservices
+  tm-auth-service:
+    build:
+      context: . # Build context is the monorepo root
+      dockerfile: ./apps/tm-auth-service/Dockerfile
+    image: localhost:5000/tm-auth-service:latest
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongodb # Auth service needs MongoDB
+    env_file:
+      - ./apps/tm-auth-service/.env
+  tm-metrics-api:
+    build:
+      context: . # Build context is the monorepo root
+      dockerfile: ./apps/tm-metrics-api/Dockerfile
+    image: localhost:5000/tm-metrics-api:latest
+    ports:
+      - "3001:3000"
+    depends_on:
+      - tm-auth-service # Might need auth
+      - mongodb # Likely needs MongoDB
+    env_file:
+      - ./apps/tm-metrics-api/.env
+  tm-notifications-api:
+    build:
+      context: . # Build context is the monorepo root
+      dockerfile: ./apps/tm-notifications-api/Dockerfile
+    image: localhost:5000/tm-notifications-api:latest
+    ports:
+      - "3002:3000"
+    depends_on:
+      - tm-auth-service # Might need auth
+      - mongodb # Likely needs MongoDB
+      - rabbitmq # Needs RabbitMQ for notifications
+    env_file:
+      - ./apps/tm-notifications-api/.env
+  tm-tasks-api:
+    build:
+      context: . # Build context is the monorepo root
+      dockerfile: ./apps/tm-tasks-api/Dockerfile
+    image: localhost:5000/tm-tasks-api:latest
+    ports:
+      - "3003:3000"
+    depends_on:
+      - tm-auth-service # Might need auth
+      - tm-notifications-api # Depends on notifications
+      - mongodb # Likely needs MongoDB
+    env_file:
+      - ./apps/tm-tasks-api/.env
+  tm-settings-api:
+    build:
+      context: . # Build context is the monorepo root
+      dockerfile: ./apps/tm-settings-api/Dockerfile
+    image: localhost:5000/tm-settings-api:latest
+    ports:
+      - "3005:3000"
+    depends_on:
+      - tm-auth-service # Might need auth
+      - tm-notifications-api # Depends on notifications
+      - mongodb # Likely needs MongoDB
+    env_file:
+      - ./apps/tm-settings-api/.env
+  # Microfrontends
+  # tm-core-app:
+  #   build:
+  #     context: . # Build context is the monorepo root
+  #     dockerfile: ./apps/tm-core-app/Dockerfile
+  #   image: localhost:5000/tm-core-app:latest
+  #   ports:
+  #     - "4200:4200"
+  #   depends_on:
+  #     - tm-auth-service # Needs auth to function
+  #     - tm-notifications-api # Needs notifications
+  #     - tm-tasks-api # Core app likely interacts with tasks
   # Message Queue
   rabbitmq:
     image: rabbitmq:3-management
@@ -21,8 +96,8 @@ services:
       - mongodb_data:/data/db
     ports:
       - 27017:27017
-  
-  mongo-express:  
+
+  mongo-express:
     image: mongo-express
     restart: always
     ports:
@@ -34,6 +109,24 @@ services:
       - ME_CONFIG_MONGODB_PORT=27017
       - ME_CONFIG_MONGODB_ADMINUSERNAME=root
       - ME_CONFIG_MONGODB_ADMINPASSWORD=example
+
+  kong:
+    build:
+      context: .
+      dockerfile: ./provision/kong/Dockerfile
+    image: localhost:5000/kong:latest
+    ports:
+      - "8080:8000" # Expose Kong's proxy port
+      - "8443:8443" # Expose Kong's HTTPS port (if using TLS)
+      - "8082:8001" # Expose Kong's Admin API port
+    volumes:
+      - ./provision/kong/kong.yaml:/opt/kong/declarative/kong.yaml:ro
+      # - ./provision/kong/kong.yaml:/opt/kong/kong.conf:ro # Mount Kong config
+      # - ./provision/kong/plugins/tm-auth:/tmp/custom_plugins/tm-auth
+    depends_on:
+      - tm-auth-service # Kong likely needs to authenticate with auth service
+      - tm-tasks-api # Kong needs the tasks API to route traffic to it
+
 volumes:
   rabbitmq_data:
   mongodb_data:
