@@ -1,4 +1,10 @@
-import { Component } from '@angular/core';
+import {
+  Component,
+  ComponentFactoryResolver,
+  OnInit,
+  ViewChild,
+  ViewContainerRef,
+} from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 @Component({
@@ -8,6 +14,13 @@ import { RouterModule } from '@angular/router';
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
+  @ViewChild('toastContainer', { read: ViewContainerRef, static: true })
+  toastContainer!: ViewContainerRef;
   title = 'tm-core-app';
+
+  async ngOnInit() {
+    const tmToastMessageComponent = await import ('tm-notifications-app/ToastMessage');
+    this.toastContainer.createComponent(tmToastMessageComponent.TmToastMessageComponent);
+  }
 }

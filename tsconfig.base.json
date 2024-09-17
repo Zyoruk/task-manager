@@ -27,6 +27,9 @@
       ],
       "tm-tasks-app/Routes": [
         "apps/tm-tasks-app/src/app/remote-entry/entry.routes.ts"
+      ],
+      "tm-notifications-app/ToastMessage": [ 
+        "apps/tm-notifications-app/src/app/components/tm-toast-message/tm-toast-message.component.ts"
       ]
     }
   },

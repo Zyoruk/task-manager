@@ -5,6 +5,8 @@ const config: ModuleFederationConfig = {
   exposes: {
     './Routes':
       'apps/tm-notifications-app/src/app/remote-entry/entry.routes.ts',
+    './ToastMessage':
+      'apps/tm-notifications-app/src/app/components/tm-toast-message/tm-toast-message.component.ts',
   },
 };
 
