@@ -1,0 +1,26 @@
+.board {
+  display: flex;
+  gap: 1rem;
+}
+
+.column {
+  background-color: lightgray;
+  padding: 1rem;
+  border-radius: 5px;
+  flex: 1; // Columns take equal width
+
+  h2 {
+    margin-bottom: 1rem;
+  }
+  /* tm-board.component.css or similar */
+
+  .empty-state {
+    display: flex;
+    justify-content: center; /* Horizontally center content */
+    align-items: center; /* Vertically center content */
+    height: 100px; /* Adjust height as needed */
+    border: 1px dashed #ccc; /* Visual cue for empty state */
+    border-radius: 5px;
+    color: #888; /* Lighter text color */
+  }
+}

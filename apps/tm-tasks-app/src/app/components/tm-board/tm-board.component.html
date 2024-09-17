@@ -1,0 +1,22 @@
+<div class="board" cdkDropListGroup>
+  @for (column of columns; track column) {
+  <div
+    class="column"
+    cdkDropList
+    [cdkDropListData]="column.tasks"
+    (cdkDropListDropped)="drop($event)"
+  >
+    <h2>{{ column.title }}</h2>
+    @for (task of column.tasks; track task) {
+    <div *cdkDrag>
+      <h3>{{ task.title }}</h3>
+      <p>{{ task.description }}</p>
+      <button (click)="onTaskDelete.emit(task)">Edit</button>
+      <button (click)="onTaskEdit.emit(task)">Delete</button>
+    </div>
+    } @if(column.tasks.length > 0) {
+    <div class="empty-state">No tasks in this column</div>
+    }
+  </div>
+  }
+</div>
