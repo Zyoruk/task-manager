@@ -66,7 +66,7 @@ services:
 plugins:
   - name: cors # Enable CORS for browser clients
     config:
-      origins: ['localhost'] # Adjust to your specific origins
+      origins: ['*'] # Adjust to your specific origins
       methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']
       headers: ['Authorization', 'Content-Type']
       credentials: true
