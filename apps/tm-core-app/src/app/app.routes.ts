@@ -6,6 +6,7 @@ import { TmLoginComponent } from './tm-login/tm-login.component';
 export const appRoutes: Route[] = [
   {
     path: 'login',
+    pathMatch: 'full',
     component: TmLoginComponent,
   },
   {
@@ -16,24 +17,24 @@ export const appRoutes: Route[] = [
       {
         path: 'tasks',
         loadChildren: () =>
-          import('tm-tasks-app/Routes').then((m) => m.remoteRoutes),
+          import('@tm-tasks-app/Routes').then((m) => m.remoteRoutes),
       },
       {
         path: 'dashboard',
         loadChildren: () =>
-          import('tm-dashboard-app/Routes').then((m) => m.remoteRoutes),
+          import('@tm-dashboard-app/Routes').then((m) => m.remoteRoutes),
       },
       {
         path: 'notifications',
         loadChildren: () =>
-          import('tm-notifications-app/Routes').then((m) => m.remoteRoutes),
+          import('@tm-notifications-app/Routes').then((m) => m.remoteRoutes),
       },
       {
         path: 'settings',
         loadChildren: () =>
-          import('tm-settings-app/Routes').then((m) => m.remoteRoutes),
+          import('@tm-settings-app/Routes').then((m) => m.remoteRoutes),
       },
-      { 
+      {
         path: '',
         redirectTo: 'dashboard',
         pathMatch: 'full'

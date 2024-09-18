@@ -15,24 +15,25 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@task-manager/tm-ui": ["./lib/tm-ui/src/index.ts"],
-      "tm-dashboard-app/Routes": [
+      "@task-manager/shared/tm-store": ["libs/shared/tm-store/src/index.ts"],
+      "@task-manager/tm-ui": ["./libs/shared/tm-ui/src/index.ts"],
+      "@tm-dashboard-app/Routes": [
         "apps/tm-dashboard-app/src/app/remote-entry/entry.routes.ts"
       ],
-      "tm-notifications-app/Routes": [
+      "@tm-notifications-app/Routes": [
         "apps/tm-notifications-app/src/app/remote-entry/entry.routes.ts"
       ],
-      "tm-notifications-app/ToastMessage": [
+      "@tm-notifications-app/ToastMessage": [
         "apps/tm-notifications-app/src/app/components/tm-toast-message/tm-toast-message.component.ts"
       ],
-      "tm-settings-app/Routes": [
+      "@tm-settings-app/Routes": [
         "apps/tm-settings-app/src/app/remote-entry/entry.routes.ts"
       ],
-      "tm-tasks-app/Routes": [
-        "apps/tm-tasks-app/src/app/remote-entry/entry.routes.ts"
-      ],
-      "tm-tasks-app/Board": [
+      "@tm-tasks-app/Board": [
         "apps/tm-tasks-app/src/app/components/tm-board/tm-board.component.ts"
+      ],
+      "@tm-tasks-app/Routes": [
+        "apps/tm-tasks-app/src/app/remote-entry/entry.routes.ts"
       ]
     }
   },
