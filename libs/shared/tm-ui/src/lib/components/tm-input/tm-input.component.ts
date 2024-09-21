@@ -18,7 +18,7 @@ export class TmInputComponent implements OnInit {
   @Input() label = '';
   @Input() disabled = false;
   @Input() type: 'text' | 'password' | 'email' = 'text';
-  @Input() value: string = '';
+  @Input() value = '';
   @Input() placeholder = '';
   @Input() formControl = new FormControl();
   @Input() floatLabel = false;
@@ -27,17 +27,20 @@ export class TmInputComponent implements OnInit {
   @Input() icon = '';
   @Input() iconPosition: 'before' | 'after' = 'before';
   @Input() maxLength?: number = undefined;
+  // eslint-disable-next-line @angular-eslint/no-output-on-prefix
   @Output() onInput = new EventEmitter<string>();
   hide = signal(false);
-  input = signal('')
-
-  ngOnInit() { 
-    this.input.set(this.value)
+  inputValue = signal('');
+  get inputType(): string {
+    return this.type === 'password' ? (this.hide() ? 'password' : 'text') : this.type;
+  }
+  ngOnInit() {
+    this.inputValue.set(this.value)
     this.hide.set(this.type === 'password')
   }
 
   onInputChange(value: Event) {
-    this.input.set((value.target as HTMLInputElement).value);
+    this.inputValue.set((value.target as HTMLInputElement).value);
     this.onInput.emit((value.target as HTMLInputElement).value);
   }
 

@@ -1,40 +1,29 @@
-<mat-form-field [hintLabel]="hint">
-    @if (label) {
-    <mat-label>{{label}}</mat-label>
-    }
-    @if(type !== 'password') {
-
-    @if (maxLength) {
-    <input matInput #input [maxLength]="maxLength" [placeholder]="placeholder" [type]="type"
-        (input)="onInputChange($event)" />
-    }
-    @if (!maxLength) {
-    <input matInput #input [placeholder]="placeholder" [type]="type" (input)="onInputChange($event)" />
-    }
-    }
-    @if(type === 'password') {
-    @if (maxLength) {
-    <input matInput #input [maxLength]="maxLength" [placeholder]="placeholder" [type]="hide() ? 'password' : 'text'"
-        (input)="onInputChange($event)" />
-    <button mat-icon-button matSuffix (click)="onHide($event)" [attr.aria-label]="'Hide password'"
-        [attr.aria-pressed]="hide()" [attr.aria-pressed]="hide()">
-        <mat-icon>{{hide() ? 'visibility_off' : 'visibility'}}</mat-icon>
+<mat-form-field [hintLabel]="hint" class="full-width-input">
+  @if (label) {
+    <mat-label>{{ label }}</mat-label>
+  }
+  <input
+    matInput
+    #input
+    [attr.maxLength]="maxLength ? maxLength : null"
+    [placeholder]="placeholder"
+    [type]="inputType"
+    (input)="onInputChange($event)"
+  />
+  @if (type === 'password') {
+    <button
+      mat-icon-button
+      matSuffix
+      (click)="onHide($event)"
+      [attr.aria-label]="'Hide password'"
+      [attr.aria-pressed]="hide()"
+    >
+      <mat-icon>{{ hide() ? 'visibility_off' : 'visibility' }}</mat-icon>
     </button>
-    }
-    @if (!maxLength) {
-    <input matInput #input [placeholder]="placeholder" [type]="hide() ? 'password' : 'text' "
-        (input)="onInputChange($event)" />
-    <button mat-icon-button matSuffix (click)="onHide($event)" [attr.aria-label]="'Hide password'"
-        [attr.aria-pressed]="hide()" [attr.aria-pressed]="hide()">
-        <mat-icon>{{hide() ? 'visibility_off' : 'visibility'}}</mat-icon>
-    </button>
-    }
-    }
-    @if(hint) {
-    <mat-hint align="end">{{hint}}</mat-hint>
-    }
-    @if(!hint && maxLength) {
-    <mat-hint align="end">{{input().length}}/{{maxLength}}</mat-hint>
-    }
-
+  }
+  @if(hint) {
+    <mat-hint align="end">{{ hint }}</mat-hint>
+  } @else if (maxLength) {
+    <mat-hint align="end">{{ inputValue().length }}/{{ maxLength }}</mat-hint>
+  }
 </mat-form-field>
