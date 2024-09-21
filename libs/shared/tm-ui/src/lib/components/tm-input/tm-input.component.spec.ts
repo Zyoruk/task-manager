@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { TmUiComponent } from './tm-ui.component';
+import { TmInputComponent } from './tm-input.component';
 
-describe('TmUiComponent', () => {
-  let component: TmUiComponent;
-  let fixture: ComponentFixture<TmUiComponent>;
+describe('TmInputComponent', () => {
+  let component: TmInputComponent;
+  let fixture: ComponentFixture<TmInputComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [TmUiComponent],
+      imports: [TmInputComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(TmUiComponent);
+    fixture = TestBed.createComponent(TmInputComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -1,22 +1,27 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TmLoginService, Credentials } from '../services/tm-login.service';
 import { FormsModule } from '@angular/forms'; // Import FormsModule
 import { loginSuccess } from '../store/auth/auth.actions';
 import { Store } from '@ngrx/store';
 import { Router } from '@angular/router';
+import { TmButtonComponent } from '@task-manager/tm-ui';
+import { TmInputComponent } from "../../../../../libs/shared/tm-ui/src/lib/components/tm-input/tm-input.component";
 
 @Component({
   selector: 'app-tm-login',
   standalone: true,
-  imports: [CommonModule, FormsModule], // Add FormsModule to imports
+  imports: [CommonModule, FormsModule, TmButtonComponent, TmInputComponent], // Add FormsModule to imports
   providers: [TmLoginService],
   templateUrl: './tm-login.component.html',
   styleUrl: './tm-login.component.css',
 })
 export class TmLoginComponent {
-  credentials: Credentials = { email: '', password: '' };
-  errorMessage: string = '';
+  credentials = signal<Credentials>({
+    email: '',
+    password: '',
+  })
+  errorMessage = '';
 
   constructor(
     private loginService: TmLoginService,
@@ -24,8 +29,13 @@ export class TmLoginComponent {
     private router: Router
   ) {}
 
+  onInputChange(name: 'email' | 'password', value: string) { 
+    console.log(name, value)
+    this.credentials.set({ ...this.credentials(), [name]: value });
+  }
+
   login(): void {
-    this.loginService.login(this.credentials).subscribe({
+    this.loginService.login(this.credentials()).subscribe({
       next: (response) => {
         // Handle successful login (e.g., store token, redirect)
         this.store.dispatch(
