@@ -6,7 +6,7 @@
     "@angular/core": "^18.2.0"
   },
   "sideEffects": false,
-  "dependencies": {
+  "peerDependenciesMeta": {
     "@angular/animations": "^18.2.5",
     "@angular/cdk": "^18.2.4",
     "@angular/material": "^18.2.4"
