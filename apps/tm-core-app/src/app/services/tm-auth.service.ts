@@ -31,7 +31,7 @@ export interface UserData {
 }
 
 @Injectable({ providedIn: 'root' }) // Make the service available globally
-export class TmLoginService {
+export class TmAuthService {
   private apiUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) {}

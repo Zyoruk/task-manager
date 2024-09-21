@@ -9,14 +9,14 @@ import {
 import { Observable, of } from 'rxjs';
 import { Store, select } from '@ngrx/store';
 import { selectAccessToken } from '../store/auth/auth.selectors';
-import { TmLoginService } from '../services/tm-login.service';
+import { TmAuthService } from '../services/tm-auth.service';
 import { catchError, map, switchMap, take } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class AuthGuard implements CanActivate {
   constructor(
     private store: Store,
-    private loginService: TmLoginService,
+    private loginService: TmAuthService,
     private router: Router
   ) {}
 
