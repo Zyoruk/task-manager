@@ -1,5 +1,5 @@
-<div class="login-container">
-  <form (ngSubmit)="login()" class="login-form">
+<div class="signup-container">
+  <form (ngSubmit)="signup()" class="signup-form">
     <tm-input
       type="email"
       [value]="credentials().email"
@@ -12,13 +12,13 @@
       label="Password"
       (onInput)="credentials().password = $event"
     ></tm-input>
-    <tm-button [variant]="'raised'" [text]="'login'" type="submit"></tm-button>
+    <tm-button [variant]="'raised'" [text]="'signup'" type="submit"></tm-button>
     <tm-icon-button
       [variant]="'stroked'"
-      [text]="'signup'"
-      [routerLink]="['/signup']"
-      [icon]="'arrow_forward'"
-      (buttonClick)="onSignUpClick($event)"
+      [text]="'login'"
+      [routerLink]="['/login']"
+      [icon]="'arrow_back'"
+      (buttonClick)="backToLogin($event)"
     ></tm-icon-button>
     <div *ngIf="errorMessage" class="error-message">
       {{ errorMessage }}

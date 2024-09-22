@@ -2,12 +2,18 @@ import { AuthGuard } from './guards/auth.guard';
 import { Route } from '@angular/router';
 import { TmCoreAppLayoutComponent } from './tm-core-app-layout/tm-core-app-layout.component';
 import { TmLoginComponent } from './tm-login/tm-login.component';
+import { TmSignUpComponent } from './tm-signup/tm-signup.component';
 
 export const appRoutes: Route[] = [
   {
     path: 'login',
     pathMatch: 'full',
     component: TmLoginComponent,
+  },
+  {
+    path: 'signup',
+    pathMatch: 'full',
+    component: TmSignUpComponent,
   },
   {
     path: '',

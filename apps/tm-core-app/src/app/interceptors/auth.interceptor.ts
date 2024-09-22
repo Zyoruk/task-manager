@@ -4,7 +4,7 @@ import { Store, select } from '@ngrx/store';
 import { selectAccessToken } from '../store/auth/auth.selectors'; // Adjust the path
 import { switchMap, take } from 'rxjs/operators';
 
-const authWhitelist = ['/login'];
+const authWhitelist = ['/login', '/signup'];
 
 export function authInterceptor(
   req: HttpRequest<unknown>,
