@@ -1,0 +1,9 @@
+.sidenav-menu {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100vh;
+}
+.sidenav-container {
+  max-height: 100vh;
+}

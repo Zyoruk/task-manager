@@ -1,0 +1,28 @@
+<mat-drawer-container class="sidenav-container" autosize [hasBackdrop]="false">
+  <mat-drawer #drawer mode="side">
+    <div class="sidenav-menu">
+      <section class="app-nav">
+        <button mat-menu-item [routerLink]="['/dashboard']">
+          <mat-icon>query_stats</mat-icon>
+          <span>Dashboard</span>
+        </button>
+        <button mat-menu-item [routerLink]="['/tasks']">
+          <mat-icon>view_kanban</mat-icon>
+          <span>Board</span>
+        </button>
+      </section>
+      <section class="admin-nav">
+        <mat-divider></mat-divider>
+        <button mat-menu-item [routerLink]="['/settings']">
+          <mat-icon>settings</mat-icon>
+          <span>Settings</span>
+        </button>
+        <button mat-menu-item (click)="exitApp.emit()">
+          <mat-icon>exit_to_app</mat-icon>
+          <span>Logout</span>
+        </button>
+      </section>
+    </div>
+  </mat-drawer>
+  <ng-content></ng-content>
+</mat-drawer-container>

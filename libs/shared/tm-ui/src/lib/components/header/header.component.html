@@ -1,0 +1,19 @@
+<mat-toolbar>
+  <header>
+    <tm-button variant="icon" icon="menu" (buttonClick)="menuClick.emit()" />
+    <div>
+      <tm-button variant="icon" icon="notifications" />
+      <tm-button variant="icon" icon="person" [matMenuTriggerFor]="menu" />
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item [routerLink]="['/settings']">
+          <mat-icon>settings</mat-icon>
+          <span>Settings</span>
+        </button>
+        <button mat-menu-item (click)="exitApp.emit()">
+          <mat-icon>exit_to_app</mat-icon>
+          <span>Logout</span>
+        </button>
+      </mat-menu>
+    </div>
+  </header>
+</mat-toolbar>
