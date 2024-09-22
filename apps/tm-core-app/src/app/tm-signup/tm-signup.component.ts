@@ -2,7 +2,6 @@ import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TmAuthService, UserData } from '../services/tm-auth.service';
 import { FormsModule } from '@angular/forms'; // Import FormsModule
-import { signupError, signupSuccess } from '../store/auth/auth.actions';
 import { Store } from '@ngrx/store';
 import { Router } from '@angular/router';
 import {
@@ -10,6 +9,7 @@ import {
   TmInputComponent,
   TmIconButtonTextComponent,
 } from '@task-manager/tm-ui';
+import { AuthFacade } from '@task-manager/shared/tm-store';
 
 @Component({
   selector: 'app-tm-signup',
@@ -21,7 +21,7 @@ import {
     TmInputComponent,
     TmIconButtonTextComponent,
   ], // Add FormsModule to imports
-  providers: [TmAuthService],
+  providers: [TmAuthService, AuthFacade],
   templateUrl: './tm-signup.component.html',
   styleUrl: './tm-signup.component.css',
 })
@@ -37,7 +37,7 @@ export class TmSignUpComponent {
   constructor(
     private authService: TmAuthService,
     private store: Store,
-    private router: Router
+    private authFacade: AuthFacade
   ) {}
 
   onInputChange(
@@ -51,13 +51,13 @@ export class TmSignUpComponent {
   signup(): void {
     this.authService.signup(this.credentials()).subscribe({
       next: (response) => {
-        this.store.dispatch(signupSuccess());
+        this.authFacade.signupSuccess();
         console.log('Login successful:', response);
       },
       error: (error) => {
         this.errorMessage = 'Invalid email or password';
         console.error('Login failed:', error);
-        this.store.dispatch(signupError());
+        this.authFacade.signupError();
       },
     });
   }

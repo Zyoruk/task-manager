@@ -1,12 +1,13 @@
 import { Component, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { logout } from '../store/auth/auth.actions'; // Adjust path if needed
+import { AuthFacade } from '@task-manager/shared/tm-store';
 
 @Component({
   selector: 'app-tm-core-app-layout',
   standalone: true,
   imports: [RouterModule],
+  providers: [AuthFacade],
   templateUrl: './tm-core-app-layout.component.html',
   styleUrl: './tm-core-app-layout.component.css',
 })
@@ -15,11 +16,11 @@ export class TmCoreAppLayoutComponent implements OnInit {
   toastContainer!: ViewContainerRef;
   title = 'tm-core-app';
 
-  constructor(private router: Router, private store: Store) {}
+  constructor(private router: Router, private authFacade: AuthFacade) {}
 
   logout() {
-    this.store.dispatch(logout());
     this.router.navigate(['/login']); // Redirect to login after logout
+    this.authFacade.logout();
   }
 
   async ngOnInit() {

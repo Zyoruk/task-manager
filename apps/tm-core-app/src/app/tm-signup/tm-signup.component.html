@@ -1,6 +1,16 @@
 <div class="signup-container">
   <form (ngSubmit)="signup()" class="signup-form">
     <tm-input
+      [value]="credentials().firstName"
+      label="First Name"
+      (onInput)="credentials().firstName = $event"
+    ></tm-input>
+    <tm-input
+      [value]="credentials().lastName"
+      label="Last Name"
+      (onInput)="credentials().lastName = $event"
+    ></tm-input>
+    <tm-input
       type="email"
       [value]="credentials().email"
       label="Email"

@@ -1,8 +1,8 @@
 import { inject } from '@angular/core';
 import { HttpHandlerFn, HttpRequest } from '@angular/common/http';
 import { Store, select } from '@ngrx/store';
-import { selectAccessToken } from '../store/auth/auth.selectors'; // Adjust the path
 import { switchMap, take } from 'rxjs/operators';
+import { selectAccessToken } from '@task-manager/shared/tm-store';
 
 const authWhitelist = ['/login', '/signup'];
 

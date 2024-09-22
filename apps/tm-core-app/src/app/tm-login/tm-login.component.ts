@@ -2,13 +2,13 @@ import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TmAuthService, Credentials } from '../services/tm-auth.service';
 import { FormsModule } from '@angular/forms'; // Import FormsModule
-import { loginSuccess } from '../store/auth/auth.actions';
 import { Store } from '@ngrx/store';
 import {
   TmButtonComponent,
   TmIconButtonTextComponent,
   TmInputComponent,
 } from '@task-manager/tm-ui';
+import { AuthFacade } from '@task-manager/shared/tm-store';
 
 @Component({
   selector: 'app-tm-login',
@@ -20,7 +20,7 @@ import {
     TmInputComponent,
     TmIconButtonTextComponent,
   ], // Add FormsModule to imports
-  providers: [TmAuthService],
+  providers: [TmAuthService, AuthFacade],
   templateUrl: './tm-login.component.html',
   styleUrl: './tm-login.component.css',
 })
@@ -31,7 +31,10 @@ export class TmLoginComponent {
   });
   errorMessage = '';
 
-  constructor(private authService: TmAuthService, private store: Store) {}
+  constructor(
+    private authService: TmAuthService,
+    private authFacade: AuthFacade
+  ) {}
 
   onInputChange(name: 'email' | 'password', value: string) {
     console.log(name, value);
@@ -41,16 +44,14 @@ export class TmLoginComponent {
   login(): void {
     this.authService.login(this.credentials()).subscribe({
       next: (response) => {
-        // Handle successful login (e.g., store token, redirect)
-        this.store.dispatch(
-          loginSuccess({ accessToken: response.access_token })
-        );
+        this.authFacade.loginSuccess({ accessToken: response.access_token });
         console.log('Login successful:', response);
       },
       error: (error) => {
         // Handle login error (e.g., display error message)
         this.errorMessage = 'Invalid email or password';
         console.error('Login failed:', error);
+        this.authFacade.loginError();
       },
     });
   }

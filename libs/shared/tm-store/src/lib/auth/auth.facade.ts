@@ -23,4 +23,16 @@ export class AuthFacade {
   logout() {
     this.store.dispatch(AuthActions.logout());
   }
+
+  signupSuccess() {
+    this.store.dispatch(AuthActions.signupSuccess());
+  }
+
+  signupError() {
+    this.store.dispatch(AuthActions.signupError());
+  }
+
+  loginError() {
+    this.store.dispatch(AuthActions.loginError());
+  }
 }

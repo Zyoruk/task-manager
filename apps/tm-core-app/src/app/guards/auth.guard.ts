@@ -8,9 +8,9 @@ import {
 } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { Store, select } from '@ngrx/store';
-import { selectAccessToken } from '../store/auth/auth.selectors';
 import { TmAuthService } from '../services/tm-auth.service';
 import { catchError, map, switchMap, take } from 'rxjs/operators';
+import { selectAccessToken } from '@task-manager/shared/tm-store';
 
 @Injectable({ providedIn: 'root' })
 export class AuthGuard implements CanActivate {
