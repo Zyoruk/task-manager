@@ -1,0 +1,45 @@
+<ng-container [ngSwitch]="variant">
+  <button
+    *ngSwitchCase="'raised'"
+    mat-raised-button
+    color="primary"
+    (click)="onClick($event)"
+    extended
+  >
+    <mat-icon>{{ icon }}</mat-icon>
+    {{ text }}
+  </button>
+
+  <button
+    *ngSwitchCase="'flat'"
+    mat-button
+    color="primary"
+    (click)="onClick($event)"
+    extended
+  >
+    <mat-icon>{{ icon }}</mat-icon>
+    {{ text }}
+  </button>
+
+  <button
+    *ngSwitchCase="'stroked'"
+    mat-stroked-button
+    color="primary"
+    (click)="onClick($event)"
+    extended
+  >
+    <mat-icon>{{ icon }}</mat-icon>
+    {{ text }}
+  </button>
+
+  <button
+    *ngSwitchDefault
+    mat-raised-button
+    color="primary"
+    (click)="onClick($event)"
+    extended
+  >
+    <mat-icon>{{ icon }}</mat-icon>
+    {{ text }}
+  </button>
+</ng-container>

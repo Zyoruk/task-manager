@@ -1,3 +1,25 @@
-<button mat-button mat-raised-button  color="secondary" (click)="onClick()">
-  {{ text }}
-</button>
+@if(variant === 'raised') {
+  <button mat-raised-button color="primary" (click)="onClick($event)">
+    {{ text }}
+  </button>
+} @else if (variant === 'flat') {
+  <button mat-button color="primary" (click)="onClick($event)">
+    {{ text }}
+  </button>
+} @else if (variant === 'stroked') {
+  <button mat-stroked-button color="primary" (click)="onClick($event)">
+    {{ text }}
+  </button>
+} @else if (variant === 'icon') {
+  <button mat-icon-button color="primary" (click)="onClick($event)">
+    <mat-icon>{{ icon }}</mat-icon>
+  </button>
+} @else if (variant === 'fab') {
+  <button mat-fab color="primary" (click)="onClick($event)">
+    {{ text }}
+  </button>
+} @else {
+  <button mat-raised-button color="primary" (click)="onClick($event)">
+    {{ text }}
+  </button>
+}
