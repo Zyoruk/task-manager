@@ -1,0 +1,5 @@
+.content {
+  max-height: calc(100vh - 64px);
+  scroll-behavior: smooth;
+  overflow-y: auto;
+}

@@ -1,15 +1,6 @@
-<header>
-    <h1>Task Management App</h1>
-    <nav>
-      <ul>
-        <li><a routerLink="/tasks">Tasks Board</a></li>
-        <li><a routerLink="/dashboard">Dashboard</a></li>
-        <li><a routerLink="/settings">Settings</a></li>
-        <li><button (click)="logout()">Logout</button></li>
-      </ul>
-    </nav>
-  </header>
-  <main>
+<tm-tm-sidenav [toggleDrawerSubject]="toggleDrawerSubject" (exitApp)="logout()">
+  <tm-header (menuClick)="handleMenuClick()" (exitApp)="logout()" />
+  <main class="content">
     <router-outlet></router-outlet>
   </main>
-<ng-container #toastContainer />
+</tm-tm-sidenav>
