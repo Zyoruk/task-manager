@@ -31,7 +31,7 @@ export class TmCoreAppLayoutComponent implements OnInit {
     const tmToastMessageComponent = await import(
       '@tm-notifications-app/ToastMessage'
     );
-    this.toastContainer.createComponent(
+    this.toastContainer?.createComponent(
       tmToastMessageComponent.TmToastMessageComponent
     );
   }

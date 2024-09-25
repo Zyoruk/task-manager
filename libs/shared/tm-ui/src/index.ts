@@ -6,3 +6,5 @@ export * from './lib/components/header/header.component';
 export * from './lib/components/tm-sidenav/tm-sidenav.component';
 
 export * from './lib/components/menu/menu.component';
+
+export * from './lib/components/tm-card/card.component';

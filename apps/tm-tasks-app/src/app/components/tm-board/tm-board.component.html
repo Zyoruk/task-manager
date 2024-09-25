@@ -1,22 +1,26 @@
-<div class="board" cdkDropListGroup>
-  @for (column of columns; track column) {
+<div class="example-container">
   <div
-    class="column"
+    class="example-list"
+    *ngFor="let column of columns"
     cdkDropList
-    [cdkDropListData]="column.tasks"
+    cdkDropListOrientation="vertical"
     (cdkDropListDropped)="drop($event)"
+    [cdkDropListData]="getColumnTasks(column.status)"
   >
     <h2>{{ column.title }}</h2>
-    @for (task of column.tasks; track task) {
-    <div *cdkDrag>
-      <h3>{{ task.title }}</h3>
-      <p>{{ task.description }}</p>
-      <button (click)="onTaskDelete.emit(task)">Edit</button>
-      <button (click)="onTaskEdit.emit(task)">Delete</button>
-    </div>
-    } @if(column.tasks.length > 0) {
-    <div class="empty-state">No tasks in this column</div>
-    }
+    <tm-card [ngClass]="'example-box'"
+      *ngFor="let task of getColumnTasks(column.status); trackBy: trackByTaskId"
+      cdkDrag
+    >
+      <div card-title>
+        {{ task.title }}
+      </div>
+      <div card-body>
+        {{ task.description }}
+      </div>
+      <div card-footer>
+        <button mat-button (click)="taskEdit.emit(task)">Edit</button>
+      </div>
+    </tm-card>
   </div>
-  }
 </div>
